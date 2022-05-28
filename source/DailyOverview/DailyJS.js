@@ -33,32 +33,34 @@ let currentDay;
 
 window.addEventListener('load', () => {
     //gets the session, if the user isn't logged in, sends them to login page
-    let session = window.sessionStorage;
-    console.log('here is storage session', session);
-    if (session.getItem('loggedIn') !== 'true') {
-        window.location.href = '../Login/Login.html';
-        //might need this to create uness entires?
-        return;
-    } else {
-        let dbPromise = initDB();
-        dbPromise.onsuccess = function (e) {
-            console.log('database connected');
-            setDB(e.target.result);
-            requestDay();
-            fetchMonthGoals();
-            fetchYearGoals();
-            let req = getSettings();
-            req.onsuccess = function (e) {
-                let settingObj = e.target.result;
-                console.log('setting theme');
-                document.documentElement.style.setProperty(
-                    '--bg-color',
-                    settingObj.theme
-                );
-            };
+    // let session = window.sessionStorage;
+    // console.log('here is storage session', session);
+    // if (session.getItem('loggedIn') !== 'true') {
+    //     window.location.href = '../Login/Login.html';
+    //     //might need this to create uness entires?
+    //     return;
+    // } else {
+    let dbPromise = initDB();
+    dbPromise.onsuccess = function (e) {
+        console.log('database connected');
+        setDB(e.target.result);
+        // get the day and also the monthly and yearly goals
+        requestDay();
+        fetchMonthGoals();
+        fetchYearGoals();
+        let req = getSettings();
+        req.onsuccess = function (e) {
+            // gets the user settings, and in particular theme to set the style/background to the theme of user
+            let settingObj = e.target.result;
+            console.log('setting theme');
+            document.documentElement.style.setProperty(
+                '--bg-color',
+                settingObj.theme
+            );
         };
-        document.getElementById('date').innerHTML = 'Today: ' + currentDateStr;
-    }
+    };
+    document.getElementById('date').innerHTML = 'Today: ' + currentDateStr;
+    // }
 });
 
 /**
@@ -74,6 +76,7 @@ function requestDay() {
         console.log(e.target.result);
         currentDay = e.target.result;
         if (currentDay === undefined) {
+            // if current day isn't in database, then we create a day from the date and create a new day bullet/area
             currentDay = initDay(currentDateStr);
             createDay(currentDay);
             let newNote = document.createElement('note-box');
@@ -100,6 +103,7 @@ function requestDay() {
  * @returns void
  */
 function fetchMonthGoals() {
+    // should we comment out these console logs? Bad coding standards to leave them in prod
     console.log('fetching month');
     console.log(currentDateStr.substring(6));
     let monthStr = currentDateStr.substring(0, 3) + currentDateStr.substring(6);
@@ -109,6 +113,7 @@ function fetchMonthGoals() {
         let monthObj = e.target.result;
         console.log(monthObj);
         if (monthObj === undefined) {
+            // create a new monthly goals if the month we get currently doesn't exist
             createMonthlyGoals(initMonth(monthStr));
         } else {
             //load in bullets
@@ -131,6 +136,8 @@ function fetchMonthGoals() {
         }
     };
 }
+
+// code for fetchMonth and fetchYear are exactly the same except one does month other does year
 
 /**
  * Gets the current year object (and creates one if one doesn't exist)
@@ -169,8 +176,9 @@ function fetchYearGoals() {
     };
 }
 
+// update notes and days when we lose focus of notes? Not really sure how that works/looks in practice
 document.querySelector('#notes').addEventListener('focusout', () => {
-    updateNote();
+    updateNotes();
     updateDay(currentDay);
 });
 
@@ -178,6 +186,7 @@ document.querySelector('.entry-form').addEventListener('submit', (submit) => {
     submit.preventDefault();
     let bText = document.querySelector('.entry-form-text').value;
     document.querySelector('.entry-form-text').value = '';
+    // get the text in form on a submit, then push an object representing the bullet into our current day
     currentDay.bullets.push({
         text: bText,
         done: false,
@@ -194,11 +203,12 @@ document.querySelector('.entry-form').addEventListener('submit', (submit) => {
 document.querySelector('#bullets').addEventListener('added', function (e) {
     console.log('got add event');
     console.log(e.composedPath());
+    // gets the index and json object of the current bullet we want to look at
     let newJson = JSON.parse(e.composedPath()[0].getAttribute('bulletJson'));
     let index = JSON.parse(e.composedPath()[0].getAttribute('index'));
     // console.log('newJson ' + JSON.stringify(newJson));
     // console.log('index ' + JSON.stringify(index));
-    // if 3rd layer of nesting
+    // if 3rd layer of nesting, add it to our children
     if (e.composedPath().length > 7) {
         currentDay.bullets[index[0]].childList[index[1]] = newJson;
     } else {
@@ -214,6 +224,7 @@ document.querySelector('#bullets').addEventListener('deleted', function (e) {
     console.log('got deleted event');
     console.log(e.composedPath());
     let index = JSON.parse(e.composedPath()[0].getAttribute('index'));
+    // i don't like this code at all really, it seems very hard-coding and limits our children levels to 2?
     let firstIndex = index[0];
     if (index.length > 1) {
         let secondIndex = index[1];
@@ -240,6 +251,7 @@ document.querySelector('#bullets').addEventListener('edited', function (e) {
     let newText = JSON.parse(e.composedPath()[0].getAttribute('bulletJson'))
         .text;
     let index = JSON.parse(e.composedPath()[0].getAttribute('index'));
+    // very similar weird code to 'deleted' directly above
     let firstIndex = index[0];
     if (index.length > 1) {
         let secondIndex = index[1];
@@ -266,6 +278,7 @@ document.querySelector('#bullets').addEventListener('done', function (e) {
     console.log('got done event');
     console.log(e.composedPath()[0]);
     let index = JSON.parse(e.composedPath()[0].getAttribute('index'));
+    // same logic as 'deleted' and 'edited' lots of similar code, but is there a way to condense it?
     let firstIndex = index[0];
     if (index.length > 1) {
         let secondIndex = index[1];
@@ -289,6 +302,7 @@ document.querySelector('#bullets').addEventListener('done', function (e) {
 document.querySelector('#bullets').addEventListener('features', function (e) {
     console.log('CHANGED CATEGORY');
     console.log(e.composedPath()[0]);
+    // same logic as before except this time allows a new feature to be added to each index
     let newFeature = JSON.parse(e.composedPath()[0].getAttribute('bulletJson'))
         .features;
     let index = JSON.parse(e.composedPath()[0].getAttribute('index'));
@@ -381,11 +395,30 @@ function editBullet() {
 /**
  * Function that updates the notes
  */
-function updateNote() {
-    let currNote = document
-        .querySelector('note-box')
-        .shadowRoot.querySelector('.noteContent').value;
-    currentDay.notes = currNote;
+function updateNotes() {
+    let newNote = document.querySelector('note-box').entry;
+
+    let date = currentDateStr.split('/'); // [month, day, year]
+    let year = date[2];
+    let month = stripZeroInDate(date[0]);
+    let day = stripZeroInDate(date[1]);
+    updateNote(year, month, day, newNote);
+}
+
+/**
+ * Strip out the prepending zero if the given string has.
+ * @param {String} string month or day to check if having prepending zero
+ * @returns the original string or the string without prepending zero
+ */
+function stripZeroInDate(string) {
+    if (string.length > 0) {
+        let prefix = string.charAt(0);
+
+        if (prefix === '0') {
+            return string.charAt(1);
+        }
+        return string;
+    }
 }
 
 input.addEventListener('change', (event) => {
