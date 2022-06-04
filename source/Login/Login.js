@@ -175,14 +175,33 @@ function isValidEmail(userEmail) {
     return true;
 }
 
+// regular expression testing on the password
+const upperCasePattern = /(?=.*?[A-Z])/;
+const lowcasePattern = /(?=.*?[a-z])/;
+const digitPattern = /(?=.*?[0-9])/;
+const specCharPattern = /(?=.*?[#?!@$%^&*-])/;
 /**
- * Check if password length is at least six.
+ * Check if password contains at least eight characters, an upper
+ * case, a number, and a special character. Raise an alert if any
+ * of the case is not satisfied.
  * @param {String} password
  * @returns true or false
  */
 function isValidPassword(password) {
-    if (password.length < 6) {
-        customAlert('Password length must be at least six!');
+    if (password.length < 8) {
+        customAlert('Password length must be at least eight!');
+        return false;
+    } else if (!upperCasePattern.test(password)) {
+        customAlert('Password must contain an upper case!');
+        return false;
+    } else if (!lowcasePattern.test(password)) {
+        customAlert('Password must contain a lower case!');
+        return false;
+    } else if (!digitPattern.test(password)) {
+        customAlert('Password must contain a digit!');
+        return false;
+    } else if (!specCharPattern.test(password)) {
+        customAlert('Password must contain a special character!');
         return false;
     }
     return true;
@@ -221,19 +240,6 @@ togPassword.addEventListener('click', function () {
 function setSignUp() {
     document.getElementById('title').innerText = 'Make your Account';
 
-    //const passwordField = document.getElementById('pin');
-
-    // // create password confirmation field
-    // let passConfField = document.createElement('input');
-    // passConfField.type = 'password';
-    // passConfField.placeholder = 'Confirm Password';
-    // passConfField.id = 'passConf';
-    // // insert password confirmation after password field
-    // passwordField.parentNode.insertBefore(
-    //     passConfField,
-    //     passwordField.nextSibling
-    // );
-
     document.getElementById('passConfirm').style.display = 'flex';
     document.getElementById('passReq').style.display = 'flex';
     document.getElementById('sign-in-email-text').innerText =
@@ -258,10 +264,7 @@ function setLogin() {
         "Don't have an account?";
     document.getElementById('passConfirm').style.display = 'none';
     document.getElementById('passReq').style.display = 'none';
-    // let passConf = document.getElementById('passConf');
-    // if (passConf) {
-    //     document.getElementById('login-center').removeChild(passConf);
-    // }
+
     document.getElementById('login-button').innerText = 'LOGIN';
     document.getElementById('signup-button').innerText = 'SIGN UP';
 }
