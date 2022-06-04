@@ -13,6 +13,7 @@ import {
     getBannerImage,
     updateProfileImage,
     getProfileImage,
+    isValidPassword,
 } from '../../Backend/BackendInit.js';
 import { auth } from '../../Backend/FirebaseInit.js';
 import {
@@ -312,8 +313,12 @@ document.getElementById('submitBtn').addEventListener('click', (e) => {
     let new_pwd = document.getElementById('new').value;
     let retype_pwd = document.getElementById('retype').value;
 
+    let errMsg = isValidPassword(new_pwd);
+
     if (new_pwd !== retype_pwd) {
         alert('Passwords did not match');
+    } else if (errMsg !== '') {
+        alert(errMsg);
     } else {
         let cred = EmailAuthProvider.credential(
             auth.currentUser.email,

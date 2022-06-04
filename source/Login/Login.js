@@ -8,6 +8,11 @@ import {
     getAdditionalUserInfo,
 } from '../Backend/firebase-src/firebase-auth.min.js';
 import { set, ref } from '../Backend/firebase-src/firebase-database.min.js';
+import {
+    isValidEmail,
+    isValidPassword,
+    customAlert,
+} from '../Backend/BackendInit.js';
 
 window.onload = () => {
     // login / signup event depending on button texts
@@ -44,7 +49,7 @@ function signIn() {
     let password = document.getElementById('pin').value;
 
     // validity check
-    if (!isValidEmail(userEmail) || !isValidPassword(password)) {
+    if (!isValidEmail(userEmail)) {
         return;
     }
 
@@ -72,7 +77,13 @@ function signUp() {
     let passConfirm = document.getElementById('passConf').value;
 
     // validity check
-    if (!isValidEmail(userEmail) || !isValidPassword(password)) {
+    if (!isValidEmail(userEmail)) {
+        return;
+    }
+
+    let errMsg = isValidPassword(password);
+    if (errMsg !== '') {
+        customAlert(errMsg);
         return;
     }
 
@@ -160,62 +171,6 @@ function googleSignIn() {
                 customAlert(error.message);
             });
     });
-}
-
-/**
- * Check if input string is an email
- * @param {String} userEmail
- * @returns true if email is valid
- */
-function isValidEmail(userEmail) {
-    if (userEmail.indexOf('@') === -1) {
-        customAlert('Invalid email!');
-        return false;
-    }
-    return true;
-}
-
-// regular expression testing on the password
-const upperCasePattern = /(?=.*?[A-Z])/;
-const lowcasePattern = /(?=.*?[a-z])/;
-const digitPattern = /(?=.*?[0-9])/;
-const specCharPattern = /(?=.*?[#?!@$%^&*-])/;
-/**
- * Check if password contains at least eight characters, an upper
- * case, a number, and a special character. Raise an alert if any
- * of the case is not satisfied.
- * @param {String} password
- * @returns true or false
- */
-function isValidPassword(password) {
-    if (password.length < 8) {
-        customAlert('Password length must be at least eight!');
-        return false;
-    } else if (!upperCasePattern.test(password)) {
-        customAlert('Password must contain an upper case!');
-        return false;
-    } else if (!lowcasePattern.test(password)) {
-        customAlert('Password must contain a lower case!');
-        return false;
-    } else if (!digitPattern.test(password)) {
-        customAlert('Password must contain a digit!');
-        return false;
-    } else if (!specCharPattern.test(password)) {
-        customAlert('Password must contain a special character!');
-        return false;
-    }
-    return true;
-}
-
-/**
- * Make pop up alert with custom css and text that is passed in
- * @param {String} text
- */
-function customAlert(text) {
-    document.querySelector('.alert').style.display = 'block';
-    document.querySelector('.alert').innerHTML =
-        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>' +
-        text;
 }
 
 let togPassword = document.querySelector('.right-icons');

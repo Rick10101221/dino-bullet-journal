@@ -596,6 +596,58 @@ async function updateProfileImage(imgStr) {
 }
 
 /**
+ * Check if input string is an email
+ * @param {String} userEmail
+ * @returns true if email is valid
+ */
+function isValidEmail(userEmail) {
+    if (userEmail.indexOf('@') === -1) {
+        customAlert('Invalid email!');
+        return false;
+    }
+    return true;
+}
+
+// regular expression testing on the password
+const upperCasePattern = /(?=.*?[A-Z])/;
+const lowcasePattern = /(?=.*?[a-z])/;
+const digitPattern = /(?=.*?[0-9])/;
+const specCharPattern = /(?=.*?[#?!@$%^&*-])/;
+/**
+ * Check if password contains at least eight characters, an upper
+ * case, a number, and a special character. Raise an alert if any
+ * of the case is not satisfied.
+ * @param {String} password
+ * @returns empty string if all conditions are satisfied. Otherwise
+ * error messaege.
+ */
+function isValidPassword(password) {
+    if (password.length < 8) {
+        return 'Password length must be at least eight!';
+    } else if (!upperCasePattern.test(password)) {
+        return 'Password must contain an upper case!';
+    } else if (!lowcasePattern.test(password)) {
+        return 'Password must contain a lower case!';
+    } else if (!digitPattern.test(password)) {
+        return 'Password must contain a digit!';
+    } else if (!specCharPattern.test(password)) {
+        return 'Password must contain a special character!';
+    }
+    return '';
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    document.querySelector('.alert').style.display = 'block';
+    document.querySelector('.alert').innerHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>' +
+        text;
+}
+
+/**
  * gets the current settings for the user
  * NOTE: Since there is only 1 user, there is only 1 setting object
  * @returns a request for a settings object
@@ -693,4 +745,7 @@ export {
     updateTheme,
     updateBannerImage,
     updateProfileImage,
+    isValidEmail,
+    isValidPassword,
+    customAlert,
 };
