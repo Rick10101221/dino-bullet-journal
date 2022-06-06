@@ -308,9 +308,7 @@ async function requestDay() {
 
         // Load in notes
         const newNote = document.createElement('note-box');
-        newNote.entry = currentDay.notes.content
-            ? currentDay.notes.content
-            : '';
+        newNote.entry = currentDay.notes.content || currentDay.notes || '';
         document.querySelector('#notes').appendChild(newNote);
 
         // Load photos
