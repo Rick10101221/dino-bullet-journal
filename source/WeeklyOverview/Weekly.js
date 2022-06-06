@@ -193,16 +193,18 @@ function eventListenerSetup() {
  */
 async function loadBannerImage() {
     let banImg = await getBannerImage();
+    const divHeader = document.querySelector('div.header');
 
     // only change if user does upload their image
     if (banImg !== 'default' && banImg !== undefined) {
-        document.querySelector(
-            'div.header'
-        ).style.backgroundImage = `url(${banImg})`;
+        divHeader.style.backgroundImage = `url(${banImg})`;
     } else {
-        document.querySelector('div.header').style.backgroundImage =
-            '../Images/weekly_header.jpg';
+        divHeader.style.backgroundImage = '../Images/weekly_header.jpg';
     }
+
+    divHeader.style.backgroundRepeat = 'no-repeat';
+    divHeader.style.backgroundPosition = 'center';
+    divHeader.style.backgroundSize = 'cover';
 }
 
 /**
