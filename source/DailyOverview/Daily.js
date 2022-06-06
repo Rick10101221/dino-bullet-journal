@@ -4,12 +4,11 @@ import {
     getDateObj,
     getDay,
     getMonthlyGoals,
+    getTheme,
     getYearlyGoals,
     updateDay,
     updateNote,
 } from '../Backend/BackendInit.js';
-
-// TODO: Fix improper photo rendering with relative index
 
 window.img = new Array(); // used to load image from <input> and draw to canvas
 const canvas = document.getElementById('myCanvas');
@@ -39,6 +38,7 @@ let currentDay;
 
 window.onload = async () => {
     // get the day and also the monthly and yearly goals
+    loadTheme();
     requestDay();
     fetchGoals(
         await getMonthlyGoals(`${month}/${year}`),
@@ -190,6 +190,15 @@ function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
     }
 
     return { width: width, height: height, startX: startX, startY: startY };
+}
+
+async function loadTheme() {
+    const userTheme = await getTheme();
+    if (userTheme === undefined) {
+        return;
+    }
+
+    document.querySelector('body').style.backgroundColor = userTheme;
 }
 
 /**
