@@ -146,7 +146,9 @@ function eventListenerSetup() {
         let new_pwd = document.getElementById('new').value;
         let retype_pwd = document.getElementById('retype').value;
 
-        if (new_pwd !== retype_pwd) {
+        if (old_pwd === '' || new_pwd === '' || retype_pwd === '') {
+            alert('A password field is empty. Please try again');
+        } else if (new_pwd !== retype_pwd) {
             alert('Passwords did not match');
         } else {
             let cred = EmailAuthProvider.credential(
