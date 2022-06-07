@@ -22,7 +22,7 @@ function signIn() {
     let userEmail = document.getElementById('email').value;
     let password = document.getElementById('pin').value;
 
-    // validity check
+    // validity check lol
     if (!isValidEmail(userEmail)) {
         customAlert('Invalid Email!');
         return;
