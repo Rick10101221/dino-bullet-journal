@@ -248,10 +248,13 @@ button#right {
     font-size: 2vh;
 }
 
-#save,
-#left,
-#right {
+#save, #left, #right, #delete, #image-input {
     cursor: pointer;
+}
+
+/* this element is the 'Choose File' button for image uploads */
+::-webkit-file-upload-button {
+    cursor:pointer;
 }
 
 /* Misc */

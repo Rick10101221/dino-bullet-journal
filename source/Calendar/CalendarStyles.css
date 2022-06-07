@@ -272,19 +272,17 @@ ul {
     right: 5vh;
 }
 
-#plus-month {
-    flex: 2;
-    text-align: center;
-}
-
-#plus-year {
+#plus-month, #plus-year {
     flex: 2;
     text-align: center;
     cursor: pointer;
+    max-width: 29px;
+    margin: auto auto;
 }
 
 .goalContainer {
     display: flex;
+    justify-content: space-between;
 }
 
 .entry-form {
