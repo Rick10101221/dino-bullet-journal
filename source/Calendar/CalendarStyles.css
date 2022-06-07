@@ -272,7 +272,8 @@ ul {
     right: 5vh;
 }
 
-#plus-month, #plus-year {
+#plus-month,
+#plus-year {
     flex: 2;
     text-align: center;
     cursor: pointer;
