@@ -24,6 +24,12 @@ const monthNames = [
     'December',
 ];
 
+// regular expression testing on the password
+const upperCasePattern = /(?=.*?[A-Z])/;
+const lowcasePattern = /(?=.*?[a-z])/;
+const digitPattern = /(?=.*?[0-9])/;
+const specCharPattern = /(?=.*?[#?!@$%^&*-])/;
+
 /**
  * add a base64 encoded photo in the database
  * @param {String} date string of the form "mm/dd/yyyy"
@@ -484,6 +490,41 @@ async function getYearlyGoals(yearStr) {
     return getDataAtDBPath(dbPath);
 }
 
+/**
+ * Check if input string is an email
+ * @param {String} userEmail
+ * @returns true if email is valid
+ */
+function isValidEmail(userEmail) {
+    if (userEmail.indexOf('@') === -1) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Check if password contains at least eight characters, an upper
+ * case, a number, and a special character. Raise an alert if any
+ * of the case is not satisfied.
+ * @param {String} password
+ * @returns empty string if all conditions are satisfied. Otherwise
+ * error message.
+ */
+function isValidPassword(password) {
+    if (password.length < 8) {
+        return 'Password length must be at least eight!';
+    } else if (!upperCasePattern.test(password)) {
+        return 'Password must contain an upper case!';
+    } else if (!lowcasePattern.test(password)) {
+        return 'Password must contain a lower case!';
+    } else if (!digitPattern.test(password)) {
+        return 'Password must contain a digit!';
+    } else if (!specCharPattern.test(password)) {
+        return 'Password must contain a special character!';
+    }
+    return '';
+}
+
 function pushObjToDBPath(path, obj) {
     push(ref(db, path), obj)
         .then(() => {
@@ -650,6 +691,8 @@ export {
     getProfileImage,
     getTheme,
     getYearlyGoals,
+    isValidEmail,
+    isValidPassword,
     updateBannerImage,
     updateDay,
     updateMonthlyGoals,

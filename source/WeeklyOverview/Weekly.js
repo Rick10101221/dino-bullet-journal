@@ -15,6 +15,7 @@ import {
     getProfileImage,
     getTheme,
     getYearlyGoals,
+    isValidPassword,
     updateBannerImage,
     updateNote,
     updateProfileImage,
@@ -128,7 +129,7 @@ function eventListenerSetup() {
     document.getElementById('logout-btn').addEventListener('click', () => {
         signOut(auth)
             .then(() => {
-                window.location.replace('../Login.html');
+                window.location.replace('../Login/Login.html');
             })
             .catch((error) => {
                 alert(error.message);
@@ -149,7 +150,12 @@ function eventListenerSetup() {
         if (old_pwd === '' || new_pwd === '' || retype_pwd === '') {
             alert('A password field is empty. Please try again');
         } else if (new_pwd !== retype_pwd) {
+        let errMsg = isValidPassword(new_pwd);
+
+        if (new_pwd !== retype_pwd) {
             alert('Passwords did not match');
+        } else if (errMsg !== '') {
+            alert(errMsg);
         } else {
             let cred = EmailAuthProvider.credential(
                 auth.currentUser.email,
