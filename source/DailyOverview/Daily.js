@@ -282,7 +282,7 @@ function renderPhotos(photos) {
         window.img[i] = new Image();
         window.img[i].src = photos[i];
     }
-    processCurrentImage();
+    setTimeout(() => processCurrentImage(), 100);
 }
 
 /**
@@ -479,7 +479,8 @@ left.addEventListener('click', () => {
         return;
     }
 
-    relative = (relative - 1) % window.img.length;
+    const n = window.img.length;
+    relative = (((relative - 1) % n) + n) % n;
 
     canv.clearRect(0, 0, canvas.width, canvas.height);
     if (window.img[relative]) {
@@ -533,6 +534,10 @@ remove.addEventListener('click', async () => {
     window.img.splice(relative, 1);
 
     relative = 0;
+    if (window.img.length == relative) {
+        canv.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
 
     updateDay(currentDay);
