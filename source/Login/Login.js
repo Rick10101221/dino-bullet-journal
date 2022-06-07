@@ -219,7 +219,7 @@ function signUp() {
     let passConfirm = document.getElementById('passConf').value;
 
     // validity check
-    if (!isValidEmail(userEmail) || !isValidPassword(password)) {
+    if (!isValidEmail(userEmail)) {
         return;
     }
 
