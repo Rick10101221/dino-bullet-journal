@@ -149,7 +149,8 @@ function eventListenerSetup() {
 
         if (old_pwd === '' || new_pwd === '' || retype_pwd === '') {
             alert('A password field is empty. Please try again');
-        } else if (new_pwd !== retype_pwd) {
+        }
+
         let errMsg = isValidPassword(new_pwd);
 
         if (new_pwd !== retype_pwd) {
