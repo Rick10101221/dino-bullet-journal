@@ -282,6 +282,8 @@ function getCurrentDate() {
         year: String(today.getFullYear()),
     };
 
+    console.log(dateObj);
+
     return dateObj;
 }
 

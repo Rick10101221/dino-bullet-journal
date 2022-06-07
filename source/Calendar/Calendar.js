@@ -249,17 +249,25 @@ async function setupCalendar(dateStr = undefined) {
     if (dateStr === undefined) {
         today = getCurrentDate();
     } else {
-        today = getDateObj(dateStr);
+        today = getDateObj(`${dateStr}/1`);
     }
+
+    console.log(today);
 
     var month = today.month - 1;
     var paddedMonth = today.month;
     var year = today.year;
     paddedDateStr = `${paddedMonth}/${year}`;
 
+    console.log(month, year);
+    console.log(paddedDateStr);
+
     monthObj = (await getMonthObj(paddedDateStr)) || {};
     monthObj.month = paddedDateStr;
     yearObj = { year: year, goals: (await getYearlyGoals(year)) || [] };
+
+    console.log(monthObj);
+    console.log(yearObj);
 
     addGoalListeners();
     renderGoals(monthObj.goals, '#monthGoal');
