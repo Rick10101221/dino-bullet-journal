@@ -164,9 +164,21 @@ function googleSignIn() {
 }
 
 function loginSignUpSetup() {
-    // login / signup event depending on button texts
     const loginBtn = document.getElementById('login-button');
+
+    // Enter event handlers
+    const userInputFields = document.querySelectorAll('.user-input');
+    for (const userInputField of userInputFields) {
+        userInputField.addEventListener('keypress', (e) => {
+            if (e.key == 'Enter') {
+                loginBtn.dispatchEvent(new Event('click'));
+            }
+        });
+    }
+
+    // login / signup event depending on button texts
     loginBtn.onclick = () => {
+        console.log('login clicked');
         if (loginBtn.innerText === 'LOGIN') {
             signIn();
         } else {
