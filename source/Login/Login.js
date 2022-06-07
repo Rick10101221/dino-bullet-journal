@@ -1,43 +1,17 @@
-import { db, auth, googleProvider } from '../Backend/FirebaseInit.js';
 import {
-    browserSessionPersistence,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signInWithPopup,
     GoogleAuthProvider,
+    browserSessionPersistence,
+    createUserWithEmailAndPassword,
     getAdditionalUserInfo,
+    signInWithEmailAndPassword,
+    signInWithPopup,
 } from '../Backend/firebase-src/firebase-auth.min.js';
-import { set, ref } from '../Backend/firebase-src/firebase-database.min.js';
-import {
-    isValidEmail,
-    isValidPassword,
-    customAlert,
-} from '../Backend/BackendInit.js';
+import { auth, db, googleProvider } from '../Backend/FirebaseInit.js';
+import { isValidEmail, isValidPassword } from '../Backend/BackendInit.js';
+import { ref, set } from '../Backend/firebase-src/firebase-database.min.js';
 
 window.onload = () => {
-    // login / signup event depending on button texts
-    const loginBtn = document.getElementById('login-button');
-    loginBtn.onclick = () => {
-        if (loginBtn.innerText === 'LOGIN') {
-            signIn();
-        } else {
-            signUp();
-        }
-    };
-
-    // change view of login and signup
-    const signupBtn = document.getElementById('signup-button');
-    signupBtn.onclick = () => {
-        if (signupBtn.innerText === 'LOGIN') {
-            setLogin();
-        } else {
-            setSignUp();
-        }
-    };
-
-    // login event with Google authentication
-    const googleLoginBtn = document.getElementById('google-button');
-    googleLoginBtn.addEventListener('click', () => googleSignIn());
+    loginSignUpSetup();
 };
 
 /**
@@ -50,6 +24,7 @@ function signIn() {
 
     // validity check
     if (!isValidEmail(userEmail)) {
+        customAlert('Invalid Email!');
         return;
     }
 
@@ -59,7 +34,9 @@ function signIn() {
             // eslint-disable-next-line no-unused-vars
             .then((userCredential) => {
                 customAlert('Successfully signed in!');
-                window.location.replace('./WeeklyOverview/WeeklyOverview.html');
+                window.location.replace(
+                    '../WeeklyOverview/WeeklyOverview.html'
+                );
             })
             .catch((error) => {
                 customAlert('Login Failed: ' + error.message);
@@ -81,8 +58,10 @@ function signUp() {
         return;
     }
 
+    // errMsg will contain a string of an error message is the password doesn't met criteria
     let errMsg = isValidPassword(password);
     if (errMsg !== '') {
+        // displays custom error message
         customAlert(errMsg);
         return;
     }
@@ -109,7 +88,7 @@ function signUp() {
                     set(ref(db, `${user.uid}`), data).then(() => {
                         customAlert('Successful Sign Up');
                         window.location.replace(
-                            './WeeklyOverview/WeeklyOverview.html'
+                            '../WeeklyOverview/WeeklyOverview.html'
                         );
                     });
                 }
@@ -118,6 +97,17 @@ function signUp() {
                 customAlert(error.message);
             });
     });
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    document.querySelector('.alert').style.display = 'block';
+    document.querySelector('.alert').innerHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>' +
+        text;
 }
 
 /**
@@ -150,13 +140,13 @@ function googleSignIn() {
                     set(ref(db, `${user.uid}`), data).then(() => {
                         customAlert('Successfully signed in!');
                         window.location.replace(
-                            './WeeklyOverview/WeeklyOverview.html'
+                            '../WeeklyOverview/WeeklyOverview.html'
                         );
                     });
                 } else {
                     customAlert('Successfully signed in!');
                     window.location.replace(
-                        './WeeklyOverview/WeeklyOverview.html'
+                        '../WeeklyOverview/WeeklyOverview.html'
                     );
                 }
             })
@@ -173,21 +163,31 @@ function googleSignIn() {
     });
 }
 
-let togPassword = document.querySelector('.right-icons');
-let password = document.querySelector('.pass');
-/**
- * Show or hide password
- */
-togPassword.addEventListener('click', function () {
-    let type =
-        password.getAttribute('type') === 'password' ? 'text' : 'password';
-    password.setAttribute('type', type);
-    if (type === 'password') {
-        togPassword.setAttribute('src', '../Images/show-pass.png');
-    } else {
-        togPassword.setAttribute('src', '../Images/hide-pass.png');
-    }
-});
+function loginSignUpSetup() {
+    // login / signup event depending on button texts
+    const loginBtn = document.getElementById('login-button');
+    loginBtn.onclick = () => {
+        if (loginBtn.innerText === 'LOGIN') {
+            signIn();
+        } else {
+            signUp();
+        }
+    };
+
+    // change view of login and signup
+    const signupBtn = document.getElementById('signup-button');
+    signupBtn.onclick = () => {
+        if (signupBtn.innerText === 'LOGIN') {
+            setLogin();
+        } else {
+            setSignUp();
+        }
+    };
+
+    // login event with Google authentication
+    const googleLoginBtn = document.getElementById('google-button');
+    googleLoginBtn.addEventListener('click', () => googleSignIn());
+}
 
 /**
  * Modify login page from login mode to signup mode
@@ -223,3 +223,19 @@ function setLogin() {
     document.getElementById('login-button').innerText = 'LOGIN';
     document.getElementById('signup-button').innerText = 'SIGN UP';
 }
+
+let togPassword = document.querySelector('.right-icons');
+let password = document.querySelector('.pass');
+/**
+ * Show or hide password
+ */
+togPassword.addEventListener('click', function () {
+    let type =
+        password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    if (type === 'password') {
+        togPassword.setAttribute('src', '../Images/show-pass.png');
+    } else {
+        togPassword.setAttribute('src', '../Images/hide-pass.png');
+    }
+});

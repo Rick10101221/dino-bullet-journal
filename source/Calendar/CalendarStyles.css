@@ -70,8 +70,6 @@ body {
     grid-template-columns: 8fr 2fr;
     text-align: left;
 }
-#photo_title {
-}
 
 /* Todo Block */
 
@@ -131,19 +129,14 @@ body {
     margin: auto;
 }
 
-.calDropBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.calYearLabel {
+    background-color: #585858;
     font-size: 2.5vw;
-    color: white;
-    background: #585858;
-    border: none;
-    outline: none;
-}
-
-.calDropBtn:hover {
-    color: #c2f7b5;
+    text-transform: uppercase;
+    letter-spacing: 0.3vw;
+    float: left;
+    margin: auto;
+    padding-left: 1vw;
 }
 
 .show-content {
@@ -153,17 +146,12 @@ body {
 .dropdown-content {
     display: block;
     position: absolute;
+    margin-top: 3vw;
     background-color: #f9f9f9;
     color: black;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-}
-
-.month-link:hover {
-    cursor: pointer;
-    color: #c2f7b5;
-    text-decoration: underline;
 }
 
 .day-notes {
@@ -211,11 +199,6 @@ body {
     text-decoration: none;
 }
 
-.calDay:hover {
-    cursor: pointer;
-    outline: 2px solid #c2f7b5;
-}
-
 .calBlankDay {
     background: none;
 }
@@ -242,7 +225,8 @@ ul {
     width: 75vw;
 
     display: grid;
-    grid-template-columns: [month] 50% [year] 50%;
+    padding: 10px;
+    grid-template-columns: [month] 48% [year] 48%;
 }
 
 #goalReminder + h1 {
@@ -262,6 +246,8 @@ ul {
     position: -webkit-sticky;
     position: sticky;
     top: 1px;
+    margin-block-start: 0.83em;
+    margin-block-end: 0em;
 }
 
 #yearGoal {
@@ -276,4 +262,107 @@ ul {
     position: -webkit-sticky;
     position: sticky;
     top: 1px;
+    margin-block-start: 0.83em;
+    margin-block-end: 0em;
+}
+
+#notesDino {
+    height: 13vh;
+    width: 10vw;
+    position: absolute;
+    bottom: 3vh;
+    right: 5vh;
+}
+
+#plus-month {
+    flex: 2;
+    text-align: center;
+}
+
+#plus-year {
+    flex: 2;
+    text-align: center;
+    cursor: pointer;
+}
+
+.goalContainer {
+    display: flex;
+}
+
+.entry-form {
+    height: 3vh;
+    padding: 0.7vh;
+}
+
+.entry-form-hide {
+    display: none;
+}
+
+.entry-form-text {
+    height: 80%;
+    width: 50%;
+    font-size: 1.5vh;
+}
+
+.entry-form-button {
+    height: 100%;
+    width: 6vh;
+    font-size: 1.5vh;
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 0.5vh;
+}
+
+/*Monthly and Yearly Goal popup*/
+#calendar-popup {
+    display: none;
+    margin: 0 auto;
+    position: absolute;
+    top: 25%;
+    width: 30%;
+    height: 30%;
+    left: 35%;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    font-family: verdana, sans-serif;
+}
+#popup-title {
+    font-size: 30px;
+    margin: 7% 5%;
+}
+#calendar-popup-text {
+    position: absolute;
+    top: 37%;
+    left: 5%;
+    height: 15%;
+    width: 90%;
+    font-size: 160%;
+    border: 0;
+    background-color: #f4f8f5;
+}
+#submit-note {
+    position: absolute;
+    bottom: 15%;
+    left: 18%;
+    width: 23%;
+    height: 18%;
+    font-size: 150%;
+    color: white;
+    background-color: #a9c7bf;
+    border: 0;
+    border-radius: 50px;
+}
+#cancel-note {
+    position: absolute;
+    bottom: 15%;
+    right: 18%;
+    width: 23%;
+    height: 18%;
+    font-size: 150%;
+    background-color: white;
+    color: #39b594;
+    outline: 2px solid #39b594;
+    border: 0px;
+    border-radius: 50px;
 }
