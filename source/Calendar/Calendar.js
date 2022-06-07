@@ -471,6 +471,10 @@ async function loadTheme() {
         `.calDay:hover { outline: 5px solid ${theme}; cursor: pointer; }`,
         0
     );
+    document.styleSheets[0].insertRule(
+        `.calToday { background-color: ${theme} !important; }`,
+        0
+    );
 }
 
 /**

@@ -1,19 +1,22 @@
+/*
+NOTE: In order to find component-specific sections of CSS, search this document
+for our delimiter: ||
+*/
+
+
+/* || General */
+
 body {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', Montserrat;
+    overflow-x: hidden;
 }
-.wrapper {
-    background: black;
-    display: grid;
-    margin: 0px;
-    padding: 0px;
-    grid-template-rows: 1fr 3fr;
-    justify-items: stretch;
-    align-items: stretch;
-    height: 100vh;
-    width: 100vw;
+
+ul {
+    list-style-type: none;
 }
+
 .calendar-wrapper {
     background: #c2f7b5;
     margin: 0px;
@@ -32,82 +35,8 @@ body {
     display: inline-block;
 }
 
-.header {
-    background-image: url('../Images/weekly_header.jpg');
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-}
-#header_date {
-    position: relative;
-    font-family: 'Inter';
-    font-style: normal;
-    color: white;
-    font-size: 7vh;
-    padding-left: 7%;
-    padding-top: 2%;
-}
 
-.content {
-    display: grid;
-    grid-template-columns: 4fr 3fr 3fr;
-}
-.weekly_preview {
-    background: #c2f7b5;
-}
-.monthly_preview {
-    background: #c2f7b5;
-    display: grid;
-    /* grid-template-rows: 2fr 8fr; */
-}
-.photo_album {
-    background: pink;
-    display: grid;
-    grid-template-rows: 1fr 9fr;
-}
-.photo_header {
-    display: grid;
-    grid-template-columns: 8fr 2fr;
-    text-align: left;
-}
-
-/* Todo Block */
-
-#todo {
-    grid-area: todo;
-    background-color: white;
-    margin: 1vw;
-    padding: 1vw 3vw 1vw 2vw;
-    border-radius: 2vw;
-    border-style: solid;
-    border-width: 1mm;
-    border-color: black;
-    height: 75vh;
-    width: 80%;
-    overflow: auto;
-
-    min-height: 35vw;
-}
-
-#todo::-webkit-scrollbar {
-    display: none; /* color of the tracking area */
-}
-
-#addTodo {
-    background-color: transparent;
-    border: none;
-    font-size: 3vh;
-}
-
-/* Calendar Block */
-
-/* TODO: fix calendar sizes */
-.calendar-div {
-    width: 75vw;
-    right: 15px;
-    top: 10px;
-    padding-top: 2vh;
-}
+/* || Header */
 
 /* Month header */
 .calMonthHeader {
@@ -129,6 +58,7 @@ body {
     margin: auto;
 }
 
+/* Year header's text */
 .calYearLabel {
     background-color: #585858;
     font-size: 2.5vw;
@@ -139,37 +69,34 @@ body {
     padding-left: 1vw;
 }
 
-.show-content {
-    display: none;
-}
-
-.dropdown-content {
-    display: block;
-    position: absolute;
-    margin-top: 3vw;
-    background-color: #f9f9f9;
-    color: black;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.day-notes {
-    text-align: center;
-}
-
-/* Weekdays (Sun-Sat) */
-.calWeekdaysLabel {
-    margin: 0;
-    background-color: white;
+.header {
+    background-image: url('../Images/weekly_header.jpg');
     display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
-.calWeekday {
-    width: 13.6%;
-    color: #666;
-    text-align: center;
-    font-size: 1.8vw;
+#header_date {
+    position: relative;
+    font-family: 'Inter';
+    font-style: normal;
+    color: white;
+    font-size: 7vh;
+    padding-left: 7%;
+    padding-top: 2%;
+}
+
+
+/* || Calendar Block */
+
+.calendar-div {
+    width: 75vw;
+    right: 15px;
+    top: 10px;
+    padding-top: 2vh;
+}
+
+.calBlankDay {
     background: none;
 }
 
@@ -199,20 +126,46 @@ body {
     text-decoration: none;
 }
 
-.calBlankDay {
+/* Weekdays (Sun-Sat) */
+.calWeekdaysLabel {
+    margin: 0;
+    background-color: white;
+    display: flex;
+}
+
+.calWeekday {
+    width: 13.6%;
+    color: #666;
+    text-align: center;
+    font-size: 1.8vw;
     background: none;
 }
 
-/* 
-    Highlight the "current" day 
-    We can change the color to be based on the theme color
-*/
-.calToday {
-    background: #c2f7b5;
+/* the inner part of each day on the calendar */
+.day-notes {
+    text-align: center;
 }
 
-ul {
-    list-style-type: none;
+.dropdown-content {
+    display: block;
+    position: absolute;
+    margin-top: 3vw;
+    background-color: #f9f9f9;
+    color: black;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.show-content {
+    display: none;
+}
+
+/* || Goal Reminder Block */
+
+.goalContainer {
+    display: flex;
+    justify-content: space-between;
 }
 
 #goalReminder {
@@ -234,6 +187,14 @@ ul {
     grid-row-start: title;
 }
 
+#notesDino {
+    height: 13vh;
+    width: 10vw;
+    position: absolute;
+    bottom: 3vh;
+    right: 5vh;
+}
+
 #monthGoal {
     grid-row-start: month;
     height: 22vh;
@@ -247,6 +208,15 @@ ul {
     top: 1px;
     margin-block-start: 0.83em;
     margin-block-end: 0em;
+}
+
+#plus-month,
+#plus-year {
+    flex: 2;
+    text-align: center;
+    cursor: pointer;
+    max-width: 29px;
+    margin: auto auto;
 }
 
 #yearGoal {
@@ -264,53 +234,9 @@ ul {
     margin-block-end: 0em;
 }
 
-#notesDino {
-    height: 13vh;
-    width: 10vw;
-    position: absolute;
-    bottom: 3vh;
-    right: 5vh;
-}
 
-#plus-month,
-#plus-year {
-    flex: 2;
-    text-align: center;
-    cursor: pointer;
-    max-width: 29px;
-    margin: auto auto;
-}
+/* || Monthly and Yearly Goal popup*/
 
-.goalContainer {
-    display: flex;
-    justify-content: space-between;
-}
-
-.entry-form {
-    height: 3vh;
-    padding: 0.7vh;
-}
-
-.entry-form-hide {
-    display: none;
-}
-
-.entry-form-text {
-    height: 80%;
-    width: 50%;
-    font-size: 1.5vh;
-}
-
-.entry-form-button {
-    height: 100%;
-    width: 6vh;
-    font-size: 1.5vh;
-    background-color: var(--bg-color);
-    border: none;
-    border-radius: 0.5vh;
-}
-
-/*Monthly and Yearly Goal popup*/
 #calendar-popup {
     display: none;
     margin: 0 auto;
@@ -324,10 +250,7 @@ ul {
     border-radius: 20px;
     font-family: verdana, sans-serif;
 }
-#popup-title {
-    font-size: 30px;
-    margin: 7% 5%;
-}
+
 #calendar-popup-text {
     position: absolute;
     top: 37%;
@@ -338,18 +261,7 @@ ul {
     border: 0;
     background-color: #f4f8f5;
 }
-#submit-note {
-    position: absolute;
-    bottom: 15%;
-    left: 18%;
-    width: 23%;
-    height: 18%;
-    font-size: 150%;
-    color: white;
-    background-color: #a9c7bf;
-    border: 0;
-    border-radius: 50px;
-}
+
 #cancel-note {
     position: absolute;
     bottom: 15%;
@@ -362,4 +274,24 @@ ul {
     outline: 2px solid #39b594;
     border: 0px;
     border-radius: 50px;
+    cursor: pointer;
+}
+
+#popup-title {
+    font-size: 30px;
+    margin: 7% 5%;
+}
+
+#submit-note {
+    position: absolute;
+    bottom: 15%;
+    left: 18%;
+    width: 23%;
+    height: 18%;
+    font-size: 150%;
+    color: white;
+    background-color: #a9c7bf;
+    border: 0;
+    border-radius: 50px;
+    cursor: pointer;
 }
