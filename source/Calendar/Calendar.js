@@ -464,6 +464,10 @@ async function loadTheme() {
         0
     );
     document.styleSheets[0].insertRule(
+        '.calBlankDay:hover { outline: 0px; }',
+        0
+    );
+    document.styleSheets[0].insertRule(
         `.calDay:hover { outline: 5px solid ${theme}; cursor: pointer; }`,
         0
     );
