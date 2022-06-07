@@ -15,6 +15,7 @@ import {
     getProfileImage,
     getTheme,
     getYearlyGoals,
+    isValidPassword,
     updateBannerImage,
     updateNote,
     updateProfileImage,
@@ -146,8 +147,12 @@ function eventListenerSetup() {
         let new_pwd = document.getElementById('new').value;
         let retype_pwd = document.getElementById('retype').value;
 
+        let errMsg = isValidPassword(new_pwd);
+
         if (new_pwd !== retype_pwd) {
             alert('Passwords did not match');
+        } else if (errMsg !== '') {
+            alert(errMsg);
         } else {
             let cred = EmailAuthProvider.credential(
                 auth.currentUser.email,
