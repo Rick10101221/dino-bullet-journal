@@ -178,7 +178,6 @@ function loginSignUpSetup() {
 
     // login / signup event depending on button texts
     loginBtn.onclick = () => {
-        console.log('login clicked');
         if (loginBtn.innerText === 'LOGIN') {
             signIn();
         } else {
