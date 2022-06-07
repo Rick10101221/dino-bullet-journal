@@ -32,16 +32,8 @@ let monthObj;
 let yearObj;
 let today, paddedDateStr;
 
-let clickFunction, editedFunction, deletedFunction, doneFunction;
-
 window.onload = async () => {
     await setupCalendar();
-    // goalListenerSetup(monthObj, '#monthGoal', '#plus-month', (obj) =>
-    //     updateMonthlyGoals(obj)
-    // );
-    // goalListenerSetup(yearObj, '#yearGoal', '#plus-year', (obj) =>
-    //     updateYearlyGoals(obj)
-    // );
 };
 
 window.onclick = function (e) {
@@ -102,14 +94,13 @@ function dayNumber(day) {
 }
 
 function goalListenerRemoval(goalDivId, addHeaderId) {
-    console.log(`removing goal listeners for ${goalDivId} and ${addHeaderId}`);
     const goals = document.querySelector(goalDivId);
     const addHeader = document.querySelector(addHeaderId);
 
-    addHeader.removeEventListener('click', clickFunction, true);
-    goals.removeEventListener('edited', editedFunction, true);
-    goals.removeEventListener('deleted', deletedFunction, true);
-    goals.removeEventListener('done', doneFunction, true);
+    addHeader.removeEventListener('click', addHeader.clickFunction);
+    goals.removeEventListener('edited', goals.editedFunction);
+    goals.removeEventListener('deleted', goals.deletedFunction);
+    goals.removeEventListener('done', goals.doneFunction);
 }
 
 function submitGoal(goalObj, goalDivId, callback) {
@@ -118,7 +109,7 @@ function submitGoal(goalObj, goalDivId, callback) {
     const input_value = popup_text.value;
     popup_text.value = '';
     let newGoalTxt = input_value;
-    console.log(goalObj, goalDivId, newGoalTxt);
+
     if (newGoalTxt === undefined || newGoalTxt === '') {
         return;
     }
@@ -137,8 +128,6 @@ function submitGoal(goalObj, goalDivId, callback) {
 }
 
 function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
-    console.log(`add goal listeners for ${goalDivId} and ${addHeaderId}`);
-    console.log(goalObj);
     const goals = document.querySelector(goalDivId);
     const addHeader = document.querySelector(addHeaderId);
 
@@ -147,8 +136,7 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
         return index;
     };
 
-    clickFunction = function () {
-        console.log(goalDivId, addHeaderId, goalObj);
+    addHeader.clickFunction = function () {
         // set up popup
         const popup = document.getElementById('calendar-popup');
         const popup_text = document.getElementById('calendar-popup-text');
@@ -169,7 +157,7 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
         });
     };
 
-    editedFunction = function (e) {
+    goals.editedFunction = function (e) {
         const newText = JSON.parse(e.composedPath()[0].getAttribute('goalJson'))
             .text;
         let index = getIndexFromEvent(e);
@@ -178,24 +166,24 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
         renderGoals(goalObj.goals, goalDivId);
     };
 
-    deletedFunction = function (e) {
+    goals.deletedFunction = function (e) {
         let index = getIndexFromEvent(e);
         goalObj.goals.splice(index, 1);
         callback(goalObj);
         renderGoals(goalObj.goals, goalDivId);
     };
 
-    doneFunction = function (e) {
+    goals.doneFunction = function (e) {
         let index = getIndexFromEvent(e);
         goalObj.goals[index].done ^= true;
         callback(goalObj);
         renderGoals(goalObj.goals, goalDivId);
     };
 
-    addHeader.addEventListener('click', clickFunction);
-    goals.addEventListener('edited', editedFunction);
-    goals.addEventListener('deleted', deletedFunction);
-    goals.addEventListener('done', doneFunction);
+    addHeader.addEventListener('click', addHeader.clickFunction);
+    goals.addEventListener('edited', goals.editedFunction);
+    goals.addEventListener('deleted', goals.deletedFunction);
+    goals.addEventListener('done', goals.doneFunction);
 }
 
 /**
@@ -261,18 +249,26 @@ async function setupCalendar(dateStr = undefined) {
     if (dateStr === undefined) {
         today = getCurrentDate();
     } else {
-        today = getDateObj(dateStr);
+        today = getDateObj(`${dateStr}/1`);
     }
+
+    console.log(today);
 
     var month = today.month - 1;
     var paddedMonth = today.month;
     var year = today.year;
     paddedDateStr = `${paddedMonth}/${year}`;
 
+    console.log(month, year);
+    console.log(paddedDateStr);
+
     monthObj = (await getMonthObj(paddedDateStr)) || {};
     monthObj.month = paddedDateStr;
     yearObj = { year: year, goals: (await getYearlyGoals(year)) || [] };
+
     console.log(monthObj);
+    console.log(yearObj);
+
     addGoalListeners();
     renderGoals(monthObj.goals, '#monthGoal');
     renderGoals(yearObj.goals, '#yearGoal');
@@ -446,12 +442,15 @@ async function setupCalendar(dateStr = undefined) {
  */
 async function loadTheme() {
     let theme = await getTheme();
-    console.log('set');
     document.getElementsByClassName('calendar-bg')[0].style.background = theme;
     document.getElementsByClassName(
         'calendar-wrapper'
     )[0].style.background = theme;
-    document.getElementsByClassName('calToday')[0].style.background = theme;
+
+    if (document.querySelector('calToday') !== null) {
+        document.getElementsByClassName('calToday')[0].style.background = theme;
+    }
+
     document.styleSheets[0].insertRule(
         `.calMonthLabel:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
         0

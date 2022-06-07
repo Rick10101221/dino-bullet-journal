@@ -222,8 +222,9 @@ ul {
     border-width: 1mm;
     /* border-color: black; */
     margin-top: 2vh;
+    margin-bottom: 2vh;
     width: 75vw;
-
+    height: 30vh;
     display: grid;
     padding: 10px;
     grid-template-columns: [month] 48% [year] 48%;
@@ -235,9 +236,7 @@ ul {
 
 #monthGoal {
     grid-row-start: month;
-    /* padding-left: 10px; */
-    height: 8.5vmin;
-    max-height: 10vmin;
+    height: 22vh;
     overflow: auto;
 }
 
@@ -252,8 +251,7 @@ ul {
 
 #yearGoal {
     grid-row-start: year;
-    height: 8.5vmin;
-    max-height: 10vmin;
+    height: 22vh;
     overflow: auto;
 }
 
