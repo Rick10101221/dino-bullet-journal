@@ -15,31 +15,84 @@ body {
     align-items: stretch;
     height: 100vh;
     width: 100vw;
+
+    /* 
+     * will only apply to those with a specified height
+     * hides whatever is overflowed, which is fine
+     * since we specified the high to be 100% 
+     */
+    overflow-y: hidden;
 }
 .header {
     background-image: url('../Images/weekly_header.jpg');
-    display: flex;
+    display: inline-flexflex;
     flex-direction: column;
     min-height: 0;
 }
 #header_date {
     position: relative;
-    width: 30%;
-    font-family: 'Inter';
+    width: fit-content;
+    text-align: center;
     font-style: normal;
+    padding: 0.5%;
     color: white;
     font-size: 7vh;
-    padding-left: 7%;
-    padding-top: 2%;
+    /* margin-left: 7%;
+    margin-top: 2%; */
+    /* padding: 5px; */
+    left: 7%;
+    top: 7%;
+    background-color: rgba(30, 30, 30, 0.7);
+    border-radius: 10px;
 }
-#header_button_container {
-    position: relative;
-    width: 8vw;
-    margin-left: 85%;
-    margin-top: -3%;
-    display: inline;
+#header_date:hover {
+    /* border: 1px solid #888; */
+    background-color: #ddd;
+    color: #888;
+    cursor: pointer;
 }
-#header_calendar {
+#header_settings_button {
+    position: absolute;
+    top: 2vh;
+    right: 5vh;
+    width: 10vh;
+    height: 10vh;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 0;
+    outline: 1.5px solid #ffffff;
+}
+#header_settings_button > img {
+    margin: 0 auto;
+    width: 10vh;
+    height: 10vh;
+    background-color: white;
+}
+#header_settings_button > img:hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}
+#header_calendar_button {
+    position: absolute;
+    top: 2vh;
+    right: 18vh;
+    width: 10vh;
+    height: 10vh;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 0;
+    outline: 1.5px solid #ffffff;
+    background-color: black;
+}
+#header_calendar_button > img {
+    margin: 0 auto;
+    width: 10vh;
+    height: 10vh;
+    filter: invert();
+}
+#header_calendar_button :hover {
+    filter: invert() brightness(50%);
+    cursor: pointer;
 }
 
 .content {
@@ -70,7 +123,7 @@ body {
     position: relative;
     display: grid;
     grid-template-rows: 1fr 9fr;
-    height: 75vh;
+    height: 74.9vh;
 }
 .photo_header {
     display: grid;
@@ -141,6 +194,7 @@ span {
     background-color: white;
     margin: 0.7vw;
     padding: 0.5vw;
+    height: 45.25vh;
     border-radius: 2vw;
     border-style: solid;
     border-width: 1mm;
@@ -150,8 +204,9 @@ span {
     grid-template-rows: [title] 15% [month] 40% [year] 40%;
 }
 
-#goalReminder + h1 {
+#goalReminder > h1 {
     grid-row-start: title;
+    font-size: 2vw;
 }
 
 #monthGoal {
@@ -166,6 +221,10 @@ span {
     position: -webkit-sticky;
     position: sticky;
     top: 1px;
+}
+
+#goalSubtitle {
+    font-size: 1.5vw;
 }
 
 #yearGoal {
@@ -195,10 +254,33 @@ span {
     position: relative;
 }
 
+#notes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#notes-save {
+    height: fit-content;
+    margin-right: 1.2vw;
+    background-color: white;
+    color: #38b593;
+    border-color: white;
+    font-size: 1.5vh;
+    box-shadow: none;
+    border-color: white;
+    border-style: solid;
+}
+
+#notes-save:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 /* css for settings */
 #settings {
     background-color: #ffffff;
-    width: 242px;
+    width: 280px;
     top: 10%;
     left: 50%;
     transform: translate(-50%, -10%);
@@ -213,7 +295,8 @@ img.pwd-icon {
     position: absolute;
     width: 12px;
     opacity: 0.2;
-    margin: 8px;
+    margin-top: 11.25px;
+    margin-left: 10px;
     z-index: 999;
 }
 input.pwd-pass {
@@ -226,6 +309,8 @@ input.pwd-pass {
     font-size: 12px;
     color: #9a9a9a;
     background-color: #f4f8f5;
+    margin-top: 2.5px;
+    margin-bottom: 2.5px;
 }
 
 input.pwd-btn {
@@ -247,14 +332,20 @@ input.pwd-btn:hover {
 }
 h2.title {
     display: inline;
-    margin-right: 45%;
+    margin-right: 15%;
+    margin-left: 2%;
+}
+#pass-subti {
+    padding-top: 2.5vh;
 }
 span.close {
     display: inline;
-    vertical-align: baseline;
-    font-size: 30px;
+    position: relative;
+    float: right;
+    font-size: 40px;
     text-align: right;
-    margin-left: 10%;
+    margin-top: -20px;
+    margin-right: -5px;
 }
 span.close:hover {
     cursor: pointer;
@@ -272,10 +363,93 @@ select {
 .bannerImage {
     margin-top: 25px;
 }
-button.banner-btn {
+.banner-text {
+    display: inline;
+    width: 20%;
+}
+#banImg-label {
+    width: 80%;
+    padding: 1% 4%;
+    cursor: pointer;
     font-size: 14px;
     color: black;
     background-color: #ffffff;
     border: 2px solid #39b594;
     border-radius: 30px;
+    display: inline;
+}
+#banImg {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+#banImg-upload {
+    width: 80%;
+    padding: 1.5% 1%;
+    cursor: pointer;
+    margin-top: 7px;
+    margin-bottom: -7px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+    color: white;
+    background-color: #39b594;
+    border: 2px solid #ffffff;
+    border-radius: 30px;
+    display: none;
+}
+#logout-btn {
+    width: 40%;
+    padding: 7px;
+    top: 50%;
+    margin: 5% 30%;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffffff;
+    background: #39b594;
+    border: 0px;
+    border-radius: 30px;
+}
+#logout-btn:hover {
+    background: #7eb8a8;
+    cursor: pointer;
+}
+#notesDino {
+    height: 13vh;
+    width: 10vw;
+    position: relative;
+    top: -9vh;
+    right: 14vh;
+}
+#proImg-label {
+    display: inline-block;
+    width: 12vh;
+    height: 12vh;
+    position: relative;
+    border-radius: 50%;
+    margin-bottom: -4.5vh;
+    margin-right: 3px;
+    max-height: 80px;
+    max-width: 80px;
+    overflow: hidden;
+}
+#proImg-label-pic {
+    display: inline;
+    margin: 0 auto;
+    height: 12vh;
+    width: 12vh;
+    max-height: 80px;
+    max-width: 80px;
+    color: white;
+}
+#proImg-label-pic:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+#proImg {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+    display: none;
 }
