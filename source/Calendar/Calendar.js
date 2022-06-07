@@ -112,6 +112,30 @@ function goalListenerRemoval(goalDivId, addHeaderId) {
     goals.removeEventListener('done', doneFunction, true);
 }
 
+function submitGoal(goalObj, goalDivId, callback) {
+    const popup = document.getElementById('calendar-popup');
+    const popup_text = document.getElementById('calendar-popup-text');
+    const input_value = popup_text.value;
+    popup_text.value = '';
+    let newGoalTxt = input_value;
+    console.log(goalObj, goalDivId, newGoalTxt);
+    if (newGoalTxt === undefined || newGoalTxt === '') {
+        return;
+    }
+    if (!('goals' in goalObj)) {
+        goalObj.goals = [];
+    }
+
+    // hide and reset popup
+    popup.style.display = 'none';
+    const popup_submit = document.getElementById('submit-note');
+    popup_submit.style.backgroundColor = '#a9c7bf';
+
+    goalObj.goals.push({ text: newGoalTxt, done: false });
+    callback(goalObj);
+    renderGoals(goalObj.goals, goalDivId);
+}
+
 function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
     console.log(`add goal listeners for ${goalDivId} and ${addHeaderId}`);
     console.log(goalObj);
@@ -135,45 +159,12 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
             popup_text.value = '';
             popup.style.display = 'none';
         };
-        let newGoalTxt;
+        popup_submit.onclick = () => submitGoal(goalObj, goalDivId, callback);
         popup_text.addEventListener('input', (e) => {
             if (e.target.value !== '') {
                 popup_submit.style.backgroundColor = '#39b594';
-                popup_submit.addEventListener('click', function submitGoal() {
-                    const input_value = popup_text.value;
-                    popup_text.value = '';
-                    popup.style.display = 'none';
-                    newGoalTxt = input_value;
-                    if (newGoalTxt === undefined || newGoalTxt === '') {
-                        return;
-                    }
-                    if (!('goals' in goalObj)) {
-                        goalObj.goals = [];
-                    }
-                    goalObj.goals.push({ text: newGoalTxt, done: false });
-                    callback(goalObj);
-                    renderGoals(goalObj.goals, goalDivId);
-                });
             } else {
                 popup_submit.style.backgroundColor = '#a9c7bf';
-                popup_submit.removeEventListener(
-                    'click',
-                    function submitGoal() {
-                        const input_value = popup_text.value;
-                        popup_text.value = '';
-                        popup.style.display = 'none';
-                        newGoalTxt = input_value;
-                        if (newGoalTxt === undefined || newGoalTxt === '') {
-                            return;
-                        }
-                        if (!('goals' in goalObj)) {
-                            goalObj.goals = [];
-                        }
-                        goalObj.goals.push({ text: newGoalTxt, done: false });
-                        callback(goalObj);
-                        renderGoals(goalObj.goals, goalDivId);
-                    }
-                );
             }
         });
     };
