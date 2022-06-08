@@ -93,6 +93,16 @@ function dayNumber(day) {
     }
 }
 
+/**
+ * first day-of-the-week (Sunday 0, Saturday 6) helper function
+ * @param {*} month
+ * @param {*} year
+ * @returns the day of the week of the first day in this month (Sunday 0, Saturday 6)
+ */
+function firstDow(month, year) {
+    return new Date(year, month, 1).getDay();
+}
+
 function goalListenerRemoval(goalDivId, addHeaderId) {
     const goals = document.querySelector(goalDivId);
     const addHeader = document.querySelector(addHeaderId);
@@ -101,30 +111,6 @@ function goalListenerRemoval(goalDivId, addHeaderId) {
     goals.removeEventListener('edited', goals.editedFunction);
     goals.removeEventListener('deleted', goals.deletedFunction);
     goals.removeEventListener('done', goals.doneFunction);
-}
-
-function submitGoal(goalObj, goalDivId, callback) {
-    const popup = document.getElementById('calendar-popup');
-    const popup_text = document.getElementById('calendar-popup-text');
-    const input_value = popup_text.value;
-    popup_text.value = '';
-    let newGoalTxt = input_value;
-
-    if (newGoalTxt === undefined || newGoalTxt === '') {
-        return;
-    }
-    if (!('goals' in goalObj)) {
-        goalObj.goals = [];
-    }
-
-    // hide and reset popup
-    popup.style.display = 'none';
-    const popup_submit = document.getElementById('submit-note');
-    popup_submit.style.backgroundColor = '#a9c7bf';
-
-    goalObj.goals.push({ text: newGoalTxt, done: false });
-    callback(goalObj);
-    renderGoals(goalObj.goals, goalDivId);
 }
 
 function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
@@ -187,16 +173,6 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
 }
 
 /**
- * first day-of-the-week (Sunday 0, Saturday 6) helper function
- * @param {*} month
- * @param {*} year
- * @returns the day of the week of the first day in this month (Sunday 0, Saturday 6)
- */
-function firstDow(month, year) {
-    return new Date(year, month, 1).getDay();
-}
-
-/**
  * last day-of-the-week (Sunday 0, Saturday 6) helper function
  * @param {*} month
  * @param {*} year
@@ -204,6 +180,46 @@ function firstDow(month, year) {
  */
 function lastDow(month, year) {
     return new Date(year, month + 1, 1).getDay() - 1;
+}
+
+/**
+ * Set user theme with their preference
+ */
+async function loadTheme() {
+    let theme = await getTheme();
+    document.getElementsByClassName('calendar-bg')[0].style.background = theme;
+    document.getElementsByClassName(
+        'calendar-wrapper'
+    )[0].style.background = theme;
+
+    if (document.querySelector('calToday') !== null) {
+        document.getElementsByClassName('calToday')[0].style.background = theme;
+    }
+
+    document.styleSheets[0].insertRule(
+        `.calMonthLabel:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
+        0
+    );
+    document.styleSheets[0].insertRule(
+        `.calYearLabel:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
+        0
+    );
+    document.styleSheets[0].insertRule(
+        `.month-link:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
+        0
+    );
+    document.styleSheets[0].insertRule(
+        '.calBlankDay:hover { outline: 0px; }',
+        0
+    );
+    document.styleSheets[0].insertRule(
+        `.calDay:hover { outline: 5px solid ${theme}; cursor: pointer; }`,
+        0
+    );
+    document.styleSheets[0].insertRule(
+        `.calToday { background-color: ${theme} !important; }`,
+        0
+    );
 }
 
 /**
@@ -237,6 +253,30 @@ function renderGoals(goalsList, goalsDivId) {
             htmlGoalsList.append(newGoal);
         }
     }
+}
+
+function submitGoal(goalObj, goalDivId, callback) {
+    const popup = document.getElementById('calendar-popup');
+    const popup_text = document.getElementById('calendar-popup-text');
+    const input_value = popup_text.value;
+    popup_text.value = '';
+    let newGoalTxt = input_value;
+
+    if (newGoalTxt === undefined || newGoalTxt === '') {
+        return;
+    }
+    if (!('goals' in goalObj)) {
+        goalObj.goals = [];
+    }
+
+    // hide and reset popup
+    popup.style.display = 'none';
+    const popup_submit = document.getElementById('submit-note');
+    popup_submit.style.backgroundColor = '#a9c7bf';
+
+    goalObj.goals.push({ text: newGoalTxt, done: false });
+    callback(goalObj);
+    renderGoals(goalObj.goals, goalDivId);
 }
 
 /**
@@ -427,46 +467,6 @@ async function setupCalendar(dateStr = undefined) {
 
     calTarget.append(daysField);
     loadTheme();
-}
-
-/**
- * Set user theme with their preference
- */
-async function loadTheme() {
-    let theme = await getTheme();
-    document.getElementsByClassName('calendar-bg')[0].style.background = theme;
-    document.getElementsByClassName(
-        'calendar-wrapper'
-    )[0].style.background = theme;
-
-    if (document.querySelector('calToday') !== null) {
-        document.getElementsByClassName('calToday')[0].style.background = theme;
-    }
-
-    document.styleSheets[0].insertRule(
-        `.calMonthLabel:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
-        0
-    );
-    document.styleSheets[0].insertRule(
-        `.calYearLabel:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
-        0
-    );
-    document.styleSheets[0].insertRule(
-        `.month-link:hover { color: ${theme}; text-decoration: underline; cursor: pointer; }`,
-        0
-    );
-    document.styleSheets[0].insertRule(
-        '.calBlankDay:hover { outline: 0px; }',
-        0
-    );
-    document.styleSheets[0].insertRule(
-        `.calDay:hover { outline: 5px solid ${theme}; cursor: pointer; }`,
-        0
-    );
-    document.styleSheets[0].insertRule(
-        `.calToday { background-color: ${theme} !important; }`,
-        0
-    );
 }
 
 /**
