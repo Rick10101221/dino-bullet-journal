@@ -178,7 +178,6 @@ h2 {
 #notes-save {
     background-color: white;
     border-color: white;
-    border-color: white;
     border-style: solid;
     box-shadow: none;
     color: #38b593;
@@ -274,5 +273,18 @@ button#right {
 #left,
 #right,
 #save {
+    background-color: white;
+    border-color: white;
+    border-style: solid;
+    box-shadow: none;
+    color: #38b593;
     cursor: pointer;
+    font-size: 1.5vh;
+    height: fit-content;
+}
+
+#save:hover,
+#delete:hover {    
+    cursor: pointer;
+    text-decoration: underline;
 }

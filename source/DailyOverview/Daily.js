@@ -294,7 +294,7 @@ function renderPhotos(photos) {
         window.img[i] = new Image();
         window.img[i].src = photos[i];
     }
-    processCurrentImage();
+    setTimeout(() => processCurrentImage(), 100);
 }
 
 /**
@@ -499,7 +499,8 @@ LEFT_BUTTON.addEventListener('click', () => {
 
     // if the left button is selected, wrap the index around to the last index
     // (if the user clicks back on the first image, render the last image)
-    relative = (relative - 1) % window.img.length;
+    const n = window.img.length;
+    relative = (((relative - 1) % n) + n) % n;
 
     CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
 
@@ -566,6 +567,10 @@ DELETE_BUTTON.addEventListener('click', async () => {
 
     // render the first image in our array after deletion
     relative = 0;
+    if (window.img.length == relative) {
+        CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    }
+
     renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
 
     updateDay(currentDay);
