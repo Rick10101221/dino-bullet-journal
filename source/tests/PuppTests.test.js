@@ -11,9 +11,20 @@ describe('Google', () => {
 });
 */
 
+/**
+ * Note on developing/testing vs deployment testing
+ * 
+ * Since this suite of tests is run automatically run on push to the testing branch, the URL needs to change
+ * on local testing with liveserver vs the testing URL can swap between the URL variable
+ * Need to also change the original url in the 'beforeAll' statement, everything else should be ok
+ * 
+ */
 describe('basic navigation for BJ', () => {
-    // change link to deployment site
-    // const URL = 'http://127.0.0.1:5500';
+    // change link to deployment site and for local testing
+    // on localhost would need to append path, on deployment don't need to
+
+    /* comment/switch the 2 following lines of code to switch between testing deployment and local*/
+    //const URL = 'http://127.0.0.1:5500/source';
     const URL = 'https://testing-stegosource-9lives.web.app';
     const MONTHNAMES = [
         'January',
@@ -31,7 +42,12 @@ describe('basic navigation for BJ', () => {
     ];
 
     beforeAll(async () => {
-        await page.goto(URL + '/source/Login/Login.html');
+        // on localhost would need to append path, on deployment don't need to
+
+        /* swap/uncomment the 2 lines below to switch between going to deployed site vs local */
+        //await page.goto(URL + '/Login/Login.html');
+        await page.goto(URL); 
+
         await page.waitForTimeout(500);
     });
 
@@ -62,10 +78,10 @@ describe('basic navigation for BJ', () => {
         await page.waitForTimeout(1000);
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(URL + '/source/WeeklyOverview/WeeklyOverview.html');
+        expect(url).toMatch(URL + '/WeeklyOverview/WeeklyOverview.html');
     });
 
-    it('Test6: at weekly screen, make sure highlighted day is the current day', async () => {
+    it('Test6: at weekly screen, make sure header day is the current day', async () => {
         const currentDateStr = await page.$eval(
             '#header_date',
             (dateHeader) => {
@@ -113,7 +129,7 @@ describe('basic navigation for BJ', () => {
     it('Test8: current date URL should be correct', async () => {
         const url = await page.evaluate(() => location.href);
 
-        expect(url).toMatch(URL + '/source/DailyOverview/DailyOverview.html');
+        expect(url).toMatch(URL + '/DailyOverview/DailyOverview.html');
     });
 
     // can no longer assume the contents of of the cells are empty?
@@ -142,7 +158,46 @@ describe('basic navigation for BJ', () => {
         expect(`${entryLength == entryLengthPrev + 1}`).toMatch('true');
     });
 
+
+    /*
+    // TODO FIX
+    // CHECK TO MAKE SURE THE BULLET appears in the weekly
+    it('Test15: making a bullet in the daily should appear in the weekly', async () => {
+
+		// go back to weekly
+        await page.$eval('#home', (button) => {
+            button.click();
+        });
+
+        await page.waitForTimeout(5000);
+
+		let flag = false;
+		// check weekly preview
+        await page.$eval('#weekly_list', (list) => {
+			// returns a HTMLCollection, iterable
+			prev = list.children;
+			console.log(prev);
+			for (const child of prev){
+				flag = true;
+				text = child.innerHTML;
+				console.log(text);
+				if (text == 'pull an all-nighter') {
+					flag = true;
+					break;
+				}
+			}
+        });
+
+
+        expect(`${flag}`).toMatch('true');
+    });
+    */
+
     it('Test15: edit a bullet in TODO', async () => {
+        // go back to daily page
+        await page.$eval('#header_date', (btn) => {
+            btn.click();
+        });
         await page.waitForTimeout('300');
 
         /*
@@ -350,7 +405,7 @@ describe('basic navigation for BJ', () => {
         await page.waitForTimeout('300');
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(URL + '/source/WeeklyOverview/WeeklyOverview.html');
+        expect(url).toMatch(URL + '/WeeklyOverview/WeeklyOverview.html');
     });
 
     it('Test24: at weekly screen, make sure top header date is still the current day', async () => {
@@ -397,7 +452,7 @@ describe('basic navigation for BJ', () => {
         });
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(URL + '/source/Calendar/Calendar.html');
+        expect(url).toMatch(URL + '/Calendar/Calendar.html');
     });
 
     // clicking on calender, calender preview checks
@@ -437,104 +492,5 @@ describe('basic navigation for BJ', () => {
         expect(`${boolDay}`).toMatch('true');
     });
 
-    /*
-	// want to check to make sure weekly preview reflects correctly on daily changes
-
-    it('Test24: making a bullet in the daily should appear in the weekly', async () => {
-		// go to daily
-        await page.$eval('#header_date', (btn) => {
-            btn.click();
-        });
-
-		// add a bullet
-        await page.$eval('.entry-form-text', (bulletEntry) => {
-            bulletEntry.value = 'pull an all-nighter';
-        });
-
-        await page.$eval('.entry-form-button', (button) => {
-            button.click();
-        });
-
-        await page.waitForTimeout(300);
-
-		// go back to weekly
-        await page.$eval('#home', (button) => {
-            button.click();
-        });
-
-        await page.waitForTimeout(2000);
-
-		let flag = false;
-		// check weekly preview
-        await page.$eval('#weekly_list', (list) => {
-			// returns a HTMLCollection, iterable
-			prev = list.children;
-			console.log(prev);
-			for (const child of prev){
-				flag = true;
-				text = child.innerHTML;
-				console.log(text);
-				if (text == 'pull an all-nighter') {
-					flag = true;
-					break;
-				}
-			}
-        });
-
-        expect(`${flag}`).toMatch('true');
-    });
-	*/
-
-    /**
-     * can do other operations on the bullet before going and deleting it
-     * eg:
-     * - does crossing it out in the daily reflect on weekly?
-     * - how about editing it?
-     * - what about adding a child?
-     *
-     */
-
-    /*
-	// TODO
-    it('Test25: deleting a bullet in the daily should make it disappear in the weekly', async () => {
-		// go to daily
-        await page.$eval('#header_date', (btn) => {
-            btn.click();
-        });
-
-        await page.waitForTimeout(300);
-
-		// delete bullet
-
-		// go back to weekly
-        await page.$eval('#home', (button) => {
-            button.click();
-        });
-
-        await page.waitForTimeout(1000);
-
-		// check to make sure bullet is gone
-
-		let flag = false;
-
-        let bulletChildren = await page.$eval('bullet-entry', (bulletList) => {
-            //gets the length of how many children the bullet has
-            return bulletList.shadowRoot.querySelector('.child').children
-                .length;
-        });
-
-        expect(`${flag}`).toMatch('true');
-    });
-
-	*/
-    /**
-     * other things to test at weekly
-     * - changing profile color images?
-     *
-     */
-
-    /**
-     * then mov eon to clicking calendar, checking calender properties
-     *
-     */
+    // Could do: create yearly/monthly goals, check
 });
