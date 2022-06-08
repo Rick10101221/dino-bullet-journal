@@ -5,7 +5,9 @@ name: Deploy to Firebase Hosting on merge
 'on':
   push:
     branches:
-      - testing 
+      # placeholder
+      - NL-91_e2e_test-Dustin 
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -21,4 +23,16 @@ jobs:
           # the target is the particular deployment site
           target: testing-stegosource-9lives
           # channelId is the different preview links (or "live" for the currently deployed)
-          channelId: live
+          # "testing-sstegosource-9-lives" just a place holder to deploy to a temp link
+          channelId: testing-stegosource-9lives  
+
+# after it is deployed, we want to run tests, manually trigger the event
+# used this source: https://stevenmortimer.com/running-github-actions-sequentially/
+- name: Trigger next workflow
+  if: success()
+  uses: peter-evans/repository-dispatch@v1
+  with:
+    token: ${{ secrets.API_TOKEN_GITHUB}}
+    repository: ${{ github.repository }}
+    event-type: trigger-workflow-tests
+    client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
