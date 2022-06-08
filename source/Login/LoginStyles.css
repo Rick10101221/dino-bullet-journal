@@ -3,7 +3,6 @@ NOTE: In order to find component-specific sections of CSS, search this document
 for our delimiter: ||
 */
 
-
 /* || General */
 
 * {
@@ -30,7 +29,6 @@ input[type='email']:focus {
     border: 1px solid #555;
 }
 
-
 /* || Left side content */
 
 #big-logo {
@@ -42,7 +40,6 @@ input[type='email']:focus {
     position: absolute;
     width: 40%;
 }
-
 
 /* || Right side content */
 

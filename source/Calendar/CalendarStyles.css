@@ -3,7 +3,6 @@ NOTE: In order to find component-specific sections of CSS, search this document
 for our delimiter: ||
 */
 
-
 /* || General */
 
 body {
@@ -34,7 +33,6 @@ ul {
     height: 100vh;
     width: 100vw;
 }
-
 
 /* || Header */
 
@@ -85,7 +83,6 @@ ul {
     padding-top: 2%;
     position: relative;
 }
-
 
 /* || Calendar Block */
 
@@ -231,7 +228,6 @@ ul {
     position: sticky;
     top: 1px;
 }
-
 
 /* || Monthly and Yearly Goal popup*/
 
