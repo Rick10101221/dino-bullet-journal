@@ -18,3 +18,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STEGOSOURCE_9LIVES }}'
           channelId: live
           projectId: stegosource-9lives
+          # target is the name of the hosting site to deploy to
+          target: stegosource-9lives
