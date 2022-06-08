@@ -6,6 +6,18 @@
     font-weight: bold;
     color: #585858;
 }
+.alert {
+    background-color: #38b593;
+    color: white;
+    display: none;
+    justify-content: space-between;
+    left: 0px;
+    margin-bottom: 15px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+}
 body {
     background-color: var(--bg-color);
     display: grid;
@@ -304,4 +316,20 @@ button#right {
     background-color: var(--bg-color);
     border: none;
     border-radius: 0.5vh;
+}
+/* The close button */
+.closebtn {
+    margin-left: 10%;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
 }

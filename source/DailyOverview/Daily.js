@@ -6,6 +6,7 @@ import {
     getMonthlyGoals,
     getTheme,
     getYearlyGoals,
+    redirectNotLoggedInUser,
     updateDay,
     updateNote,
 } from '../Backend/BackendInit.js';
@@ -36,7 +37,14 @@ let relative = 0; // index used for accessing images
 // store current day data to update when user leaves page
 let currentDay;
 
+const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
+
 window.onload = async () => {
+    await redirectNotLoggedInUser(
+        (msg) => customAlert(msg),
+        PAGE_TIMEOUT_FOR_INVALID_USER
+    );
+
     // get the day and also the monthly and yearly goals
     loadTheme();
     requestDay();
@@ -57,6 +65,20 @@ function bulletChangeResolution() {
     document.querySelector('#bullets').innerHTML = '';
     renderBullets(currentDay.bullets);
     updateDay(currentDay);
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    const closeButtonHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>';
+    document.querySelector('.alert').style.display = 'flex';
+    document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
+    setTimeout(() => {
+        document.querySelector('.alert').style.display = 'none';
+    }, 3000);
 }
 
 /**
@@ -368,7 +390,10 @@ document.getElementById('home').addEventListener('click', () => {
 
 // add listener for saving notes
 const noteSave = document.getElementById('notes-save');
-noteSave.addEventListener('click', () => updateNotes());
+noteSave.addEventListener('click', () => {
+    updateNotes();
+    customAlert('Notes saved!');
+});
 
 // ~~~~~~~~~~~~~~~ Bullet Event Listeners ~~~~~~~~~~~~~~~
 
