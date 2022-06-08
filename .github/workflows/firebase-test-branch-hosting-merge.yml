@@ -17,5 +17,5 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STEGOSOURCE_9LIVES }}'
           target: testing-stegosource-9lives
-          channel: live
+          channelId: live
           projectId: stegosource-9lives
