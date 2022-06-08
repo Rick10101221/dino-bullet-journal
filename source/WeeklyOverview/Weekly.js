@@ -16,6 +16,7 @@ import {
     getTheme,
     getYearlyGoals,
     isValidPassword,
+    redirectNotLoggedInUser,
     updateBannerImage,
     updateNote,
     updateProfileImage,
@@ -25,6 +26,7 @@ import {
 import { auth } from '../Backend/FirebaseInit.js';
 
 const currDateObj = getCurrentDate();
+const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
 
 /**
  * add a bullet to a specified unordered list
@@ -70,6 +72,16 @@ function bulletParser(bullets, list) {
     for (const [_, bullet] of Object.entries(bullets)) {
         appendBulletToList(bullet, list);
     }
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    const closeButtonHTML = '<span class="closebtn">&times;</span>';
+    document.querySelector('.alert').style.display = 'flex';
+    document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
 }
 
 function eventListenerSetup() {
@@ -375,7 +387,12 @@ function updateNotes(currDateString) {
 }
 
 // call setup functions
-window.onload = () => {
+window.onload = async () => {
+    await redirectNotLoggedInUser(
+        (msg) => customAlert(msg),
+        PAGE_TIMEOUT_FOR_INVALID_USER
+    );
+
     eventListenerSetup();
 
     // load panels

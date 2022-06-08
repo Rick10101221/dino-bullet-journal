@@ -6,6 +6,18 @@
     font-weight: bold;
     color: #585858;
 }
+.alert {
+    background-color: #38b593;
+    color: white;
+    display: none;
+    justify-content: space-between;
+    left: 0px;
+    margin-bottom: 15px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+}
 body {
     background-color: var(--bg-color);
     display: grid;

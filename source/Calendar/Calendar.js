@@ -4,6 +4,7 @@ import {
     getMonthObj,
     getTheme,
     getYearlyGoals,
+    redirectNotLoggedInUser,
     updateMonthlyGoals,
     updateYearlyGoals,
 } from '../Backend/BackendInit.js';
@@ -27,12 +28,18 @@ const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dayOVLink = '../DailyOverview/DailyOverview.html';
 const yrStart = 2018;
 const yrEnd = 2025;
+const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
 
 let monthObj;
 let yearObj;
 let today, paddedDateStr;
 
 window.onload = async () => {
+    await redirectNotLoggedInUser(
+        (msg) => customAlert(msg),
+        PAGE_TIMEOUT_FOR_INVALID_USER
+    );
+
     await setupCalendar();
 };
 
@@ -68,6 +75,16 @@ function addGoalListeners() {
     goalListenerSetup(yearObj, '#yearGoal', '#plus-year', (obj) =>
         updateYearlyGoals(obj)
     );
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    const closeButtonHTML = '<span class="closebtn">&times;</span>';
+    document.querySelector('.alert').style.display = 'flex';
+    document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
 }
 
 /**
