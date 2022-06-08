@@ -3,9 +3,9 @@
 name: Deploy to Testing site-Firebase Hosting on merge to testing
 'on':
   push:
-    # placeholder branch
+    # placeholder branch can be used instead of "testing" to check action runs
     branches:
-      - NL-91_e2e_test-Dustin
+      - testing
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
           target: testing-stegosource-9lives
           # channelId is the different preview links (or "live" for the currently deployed)
           # "testing-stegosource-9-lives" is  just a place holder to deploy to a temp link
-          channelId: testing-stegosource-9lives
+          channelId: live
           
   run_testing:
       # "needs: identifies any jobs that must complete successfully before
