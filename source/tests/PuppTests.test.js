@@ -1,4 +1,3 @@
-
 /*
 describe('Google', () => {
     beforeAll(async () => {
@@ -12,9 +11,9 @@ describe('Google', () => {
 */
 
 describe('basic navigation for BJ', () => {
-	// change easier
-	const URL =  'http://127.0.0.1:5500';
-	const MONTHNAMES= [
+    // change easier
+    const URL = 'http://127.0.0.1:5500';
+    const MONTHNAMES = [
         'January',
         'February',
         'March',
@@ -29,15 +28,8 @@ describe('basic navigation for BJ', () => {
         'December',
     ];
 
-
-
-
-
     beforeAll(async () => {
-        await page.goto(
-			URL + '/source/Login/Login.html'
-            
-        );
+        await page.goto(URL + '/source/Login/Login.html');
         await page.waitForTimeout(500);
     });
 
@@ -52,7 +44,7 @@ describe('basic navigation for BJ', () => {
         jest.setTimeout(30000);
 
         await page.$eval('#email', (usernameInput) => {
-			// test email
+            // test email
             usernameInput.value = 'test@gmail.com';
         });
 
@@ -64,35 +56,35 @@ describe('basic navigation for BJ', () => {
             button.click();
         });
 
-		// need to give page time to login
+        // need to give page time to login
         await page.waitForTimeout(1000);
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(
-            URL + '/source/WeeklyOverview/WeeklyOverview.html'
-        );
+        expect(url).toMatch(URL + '/source/WeeklyOverview/WeeklyOverview.html');
     });
 
     it('Test6: at weekly screen, make sure highlighted day is the current day', async () => {
-
-        const currentDateStr = await page.$eval('#header_date', (dateHeader) => {
-            return dateHeader.innerHTML;
-        });
+        const currentDateStr = await page.$eval(
+            '#header_date',
+            (dateHeader) => {
+                return dateHeader.innerHTML;
+            }
+        );
 
         let currentDate = new Date();
 
         //kinda too lazy to build the string
         let boolDay = currentDateStr.indexOf(`${currentDate.getDate()}`) > -1;
         let boolMonth =
-            currentDateStr.indexOf(`${MONTHNAMES[currentDate.getMonth()]}`) > -1;
+            currentDateStr.indexOf(`${MONTHNAMES[currentDate.getMonth()]}`) >
+            -1;
         let boolYear =
             currentDateStr.indexOf(`${currentDate.getFullYear()}`) > -1;
 
         expect(`${boolDay && boolMonth && boolYear}`).toMatch('true');
-
     });
 
-	// copied from old
+    // copied from old
     it('Test7: click on "Go to current day daily overview", should go to day with correct date heading', async () => {
         await page.$eval('#header_date', (btn) => {
             btn.click();
@@ -115,19 +107,16 @@ describe('basic navigation for BJ', () => {
         expect(`${boolDay && boolMonth && boolYear}`).toMatch('true');
     });
 
-	// new implementation doesn't encode URL when visiting directly from the weekly (not from calendar) 
+    // new implementation doesn't encode URL when visiting directly from the weekly (not from calendar)
     it('Test8: current date URL should be correct', async () => {
         const url = await page.evaluate(() => location.href);
 
-
-        expect(url).toMatch(
-            URL + '/source/DailyOverview/DailyOverview.html'
-        );
+        expect(url).toMatch(URL + '/source/DailyOverview/DailyOverview.html');
     });
 
-	// can no longer assume the contents of of the cells are empty?
-	// there exists a few old tests which check to make sure boxes are empty
-	// this may not apply anymore since there could be preexisting stuff
+    // can no longer assume the contents of of the cells are empty?
+    // there exists a few old tests which check to make sure boxes are empty
+    // this may not apply anymore since there could be preexisting stuff
 
     it('Test14: add a bullet to TODO, check length', async () => {
         const entryLengthPrev = await page.$eval('#bullets', (bullets) => {
@@ -246,7 +235,7 @@ describe('basic navigation for BJ', () => {
 
         await page.waitForTimeout('300');
 
-		// children of the parent should be 0 (we just deleted it)
+        // children of the parent should be 0 (we just deleted it)
         const entryLength = await page.$eval('bullet-entry', (bullets) => {
             //gets how many children the bullet has
             return bullets.shadowRoot.querySelector('.child').childNodes.length;
@@ -281,11 +270,14 @@ describe('basic navigation for BJ', () => {
     });
 
     it('Test20b: add a child bullet in TODO, delete parent pt2', async () => {
-		// deleting a bullet should decrease to it's original
-        let bulletChildrenLenPrev = await page.$eval('#bullets', (bulletList) => {
-            //gets the length of how many children the bullet has
-            return bulletList.childNodes.length;
-        });
+        // deleting a bullet should decrease to it's original
+        let bulletChildrenLenPrev = await page.$eval(
+            '#bullets',
+            (bulletList) => {
+                //gets the length of how many children the bullet has
+                return bulletList.childNodes.length;
+            }
+        );
         await page.$eval('bullet-entry', (bulletList) => {
             //clicks "delete" for the parent bullet
             bulletList.shadowRoot.querySelector('#delete').click();
@@ -298,7 +290,9 @@ describe('basic navigation for BJ', () => {
             return bulletList.childNodes.length;
         });
 
-        expect(`${bulletChildrenLen == (bulletChildrenLenPrev - 1)}`).toMatch('true');
+        expect(`${bulletChildrenLen == bulletChildrenLenPrev - 1}`).toMatch(
+            'true'
+        );
     });
 
     it('Test21: adding notes shows up', async () => {
@@ -324,14 +318,14 @@ describe('basic navigation for BJ', () => {
 
     it('Test22: clicking save notes, refreshing notes will still be there', async () => {
         await page.$eval('#notes-save', (btn) => {
-			btn.click();
+            btn.click();
         });
 
         await page.waitForTimeout('300');
 
-		page.reload();
+        page.reload();
 
-		// timeout for refresh
+        // timeout for refresh
         await page.waitForTimeout('2000');
 
         let noteText = await page.$eval('note-box', (notebox) => {
@@ -348,41 +342,41 @@ describe('basic navigation for BJ', () => {
 
     it('Test23: clicking home, goes back to home', async () => {
         await page.$eval('#home', (house) => {
-			house.click();
+            house.click();
         });
 
         await page.waitForTimeout('300');
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(
-            URL + '/source/WeeklyOverview/WeeklyOverview.html'
-        );
+        expect(url).toMatch(URL + '/source/WeeklyOverview/WeeklyOverview.html');
     });
 
     it('Test24: at weekly screen, make sure top header date is still the current day', async () => {
-
-        const currentDateStr = await page.$eval('#header_date', (dateHeader) => {
-            return dateHeader.innerHTML;
-        });
+        const currentDateStr = await page.$eval(
+            '#header_date',
+            (dateHeader) => {
+                return dateHeader.innerHTML;
+            }
+        );
 
         let currentDate = new Date();
 
         //kinda too lazy to build the string
         let boolDay = currentDateStr.indexOf(`${currentDate.getDate()}`) > -1;
         let boolMonth =
-            currentDateStr.indexOf(`${MONTHNAMES[currentDate.getMonth()]}`) > -1;
+            currentDateStr.indexOf(`${MONTHNAMES[currentDate.getMonth()]}`) >
+            -1;
         let boolYear =
             currentDateStr.indexOf(`${currentDate.getFullYear()}`) > -1;
 
         expect(`${boolDay && boolMonth && boolYear}`).toMatch('true');
-
     });
 
-	/**
-	 * idea for pipeline, try to make the tests point to the testing URL
-	 * but wait until after the testing URl deploys then point to the URL and run the tests
-	 * 
-	 */
+    /**
+     * idea for pipeline, try to make the tests point to the testing URL
+     * but wait until after the testing URl deploys then point to the URL and run the tests
+     *
+     */
 
     it('Test23: notes on weekly should be same', async () => {
         let noteText = await page.$eval('note-box', (notebox) => {
@@ -393,62 +387,55 @@ describe('basic navigation for BJ', () => {
         expect(noteText).toMatch('pickup amazon package from locker');
     });
 
-	// clicking on calender, calender preview checks
+    // clicking on calender, calender preview checks
     it('Test28: clicking on calender brings you to calendar page', async () => {
         await page.$eval('#header_calendar_button', (calDiv) => {
-			// extracts image to click on
-			calDiv.children[0].click();
+            // extracts image to click on
+            calDiv.children[0].click();
         });
 
         const url = await page.evaluate(() => location.href);
-        expect(url).toMatch(
-            URL + '/source/Calendar/Calendar.html'
-        );
+        expect(url).toMatch(URL + '/source/Calendar/Calendar.html');
     });
 
-	// clicking on calender, calender preview checks
+    // clicking on calender, calender preview checks
     it('Test29: month match the current one', async () => {
-
         await page.waitForTimeout('300');
         const currMonth = await page.$eval('.calMonthLabel', (month) => {
             return month.innerHTML;
         });
 
         let currentDate = new Date();
-		let month = MONTHNAMES[currentDate.getMonth()]
+        let month = MONTHNAMES[currentDate.getMonth()];
         expect(`${currMonth == month}`).toMatch('true');
     });
 
     it('Test30: year match the current one', async () => {
-
         await page.waitForTimeout('300');
         const currYear = await page.$eval('.calYearLabel', (month) => {
             return month.innerHTML;
         });
 
         let currentDate = new Date();
-		let year = currentDate.getFullYear();
+        let year = currentDate.getFullYear();
         expect(`${currYear == year}`).toMatch('true');
     });
 
     it('Test31: current highlighted day is current day', async () => {
-
         await page.waitForTimeout('300');
         const dayText = await page.$eval('.calToday', (day) => {
             return day.innerHTML;
         });
 
         let currentDate = new Date();
-		let day = currentDate.getDate();
+        let day = currentDate.getDate();
 
-        let boolDay = (dayText.indexOf(day) ==  0);
+        let boolDay = dayText.indexOf(day) == 0;
 
         expect(`${boolDay}`).toMatch('true');
     });
-	
 
-
-	/*
+    /*
 	// want to check to make sure weekly preview reflects correctly on daily changes
 
     it('Test24: making a bullet in the daily should appear in the weekly', async () => {
@@ -496,16 +483,16 @@ describe('basic navigation for BJ', () => {
     });
 	*/
 
-	/** 
-	 * can do other operations on the bullet before going and deleting it
-	 * eg:
-	 * - does crossing it out in the daily reflect on weekly?
-	 * - how about editing it?
-	 * - what about adding a child?
-	 * 
-	 */
+    /**
+     * can do other operations on the bullet before going and deleting it
+     * eg:
+     * - does crossing it out in the daily reflect on weekly?
+     * - how about editing it?
+     * - what about adding a child?
+     *
+     */
 
-	/*
+    /*
 	// TODO
     it('Test25: deleting a bullet in the daily should make it disappear in the weekly', async () => {
 		// go to daily
@@ -538,18 +525,14 @@ describe('basic navigation for BJ', () => {
     });
 
 	*/
-	/**
-	 * other things to test at weekly
-	 * - changing profile color images?
-	 * 
-	 */
+    /**
+     * other things to test at weekly
+     * - changing profile color images?
+     *
+     */
 
-	/**
-	 * then mov eon to clicking calendar, checking calender properties
-	 * 
-	 */
-
-
-
-
+    /**
+     * then mov eon to clicking calendar, checking calender properties
+     *
+     */
 });
