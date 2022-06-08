@@ -252,7 +252,7 @@ ul {
 #calendar-popup-text {
     background-color: #f4f8f5;
     border: 0;
-    font-size: 160%;
+    font-size: 2vh;
     height: 15%;
     left: 5%;
     position: absolute;
@@ -267,7 +267,7 @@ ul {
     bottom: 15%;
     color: #39b594;
     cursor: pointer;
-    font-size: 150%;
+    font-size: 2vh;
     height: 18%;
     outline: 2px solid #39b594;
     position: absolute;
@@ -287,7 +287,7 @@ ul {
     bottom: 15%;
     color: white;
     cursor: pointer;
-    font-size: 150%;
+    font-size: 2vh;
     height: 18%;
     left: 18%;
     position: absolute;

@@ -1,9 +1,9 @@
 // <bullet-entry> custom web component
-const starSvg = '../DailyOverview/Images/Star.svg';
-const pencilSvg = '../DailyOverview/Images/Pencil.svg';
-const houseSvg = './../DailyOverview/Images/House.svg';
-const heartSvg = '../DailyOverview/Images/Heart.svg';
-const eventSvg = '../DailyOverview/Images/Event.svg';
+const STAR_SVG = '../DailyOverview/Images/Star.svg';
+const PENCIL_SVG = '../DailyOverview/Images/Pencil.svg';
+const HOUSE_SVG = './../DailyOverview/Images/House.svg';
+const HEART_SVG = '../DailyOverview/Images/Heart.svg';
+const EVENT_SVG = '../DailyOverview/Images/Event.svg';
 
 class BulletEntry extends HTMLElement {
     constructor() {
@@ -287,19 +287,19 @@ class BulletEntry extends HTMLElement {
                 ul.style.listStyleImage = 'none';
                 break;
             case 'important': // star icon
-                ul.style.listStyleImage = `url(${starSvg})`;
+                ul.style.listStyleImage = `url(${STAR_SVG})`;
                 break;
             case 'workRelated': // pencil
-                ul.style.listStyleImage = `url(${pencilSvg})`;
+                ul.style.listStyleImage = `url(${PENCIL_SVG})`;
                 break;
             case 'household': // house
-                ul.style.listStyleImage = `url(${houseSvg})`;
+                ul.style.listStyleImage = `url(${HOUSE_SVG})`;
                 break;
             case 'personal': // heart
-                ul.style.listStyleImage = `url(${heartSvg})`;
+                ul.style.listStyleImage = `url(${HEART_SVG})`;
                 break;
             case 'event': // heart
-                ul.style.listStyleImage = `url(${eventSvg})`;
+                ul.style.listStyleImage = `url(${EVENT_SVG})`;
                 break;
             case 'other': // square
                 ul.style.listStyleType = 'square';

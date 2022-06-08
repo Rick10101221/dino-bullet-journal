@@ -24,7 +24,7 @@ import {
 
 import { auth } from '../Backend/FirebaseInit.js';
 
-const currDateObj = getCurrentDate();
+const CURR_DATE_OBJ = getCurrentDate();
 
 /**
  * add a bullet to a specified unordered list
@@ -183,7 +183,7 @@ function eventListenerSetup() {
 
     // make the date header of the page reflect the current date
     const headerDate = document.getElementById('header_date');
-    const { day, month, year } = currDateObj;
+    const { day, month, year } = CURR_DATE_OBJ;
     headerDate.innerHTML = `${getMonthName(month)} ${day}, ${year}`;
     // clicking main date header on weekly overview will navigate to daily
     // overview
@@ -387,6 +387,6 @@ window.onload = () => {
     loadBannerImage();
     loadProfileImage();
     loadWeek();
-    loadNotes(currDateObj);
-    loadGoalReminders(currDateObj);
+    loadNotes(CURR_DATE_OBJ);
+    loadGoalReminders(CURR_DATE_OBJ);
 };

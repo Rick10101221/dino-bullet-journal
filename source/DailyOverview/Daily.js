@@ -10,26 +10,26 @@ import {
     updateNote,
 } from '../Backend/BackendInit.js';
 
-window.img = new Array(); // used to load image from <input> and draw to canvas
-const canvas = document.getElementById('myCanvas');
-const canv = canvas.getContext('2d');
-const input = document.getElementById('image-input');
+window.img = new Array(); // used to load image from <input> and draw to CANVAS
+const CANVAS = document.getElementById('myCanvas');
+const CANV = CANVAS.getContext('2d');
+const IMAGE_INPUT = document.getElementById('image-input');
 
 // Buttons
-const left = document.getElementById('left');
-const right = document.getElementById('right');
-const save = document.getElementById('save');
-const remove = document.getElementById('delete');
+const LEFT_BUTTON = document.getElementById('left');
+const RIGHT_BUTTON = document.getElementById('right');
+const SAVE_BUTTON = document.getElementById('save');
+const DELETE_BUTTON = document.getElementById('delete');
 
-const params = new URLSearchParams(window.location.search);
+const URL_PARAMS = new URLSearchParams(window.location.search);
 let currDateObj;
-if (params.has('date')) {
-    currDateObj = getDateObj(params.get('date'));
+if (URL_PARAMS.has('date')) {
+    currDateObj = getDateObj(URL_PARAMS.get('date'));
 } else {
     currDateObj = getCurrentDate();
 }
 const { day, month, year } = currDateObj;
-const currDateString = `${month}/${day}/${year}`;
+const CURR_DATE_STRING = `${month}/${day}/${year}`;
 
 let relative = 0; // index used for accessing images
 
@@ -156,11 +156,11 @@ function getBulletList() {
 }
 
 /**
- * Takes in the dimensions of the canvas and the new image, then calculates the
+ * Takes in the dimensions of the CANVAS and the new image, then calculates the
  * new dimensions of the image so that it fits perfectly into the Canvas and
  * maintains aspect ratio
- * @param {number} canvasWidth Width of the canvas element to insert image into
- * @param {number} canvasHeight Height of the canvas element to insert image
+ * @param {number} canvasWidth Width of the CANVAS element to insert image into
+ * @param {number} canvasHeight Height of the CANVAS element to insert image
  * into
  * @param {number} imageWidth Width of the new user submitted image
  * @param {number} imageHeight Height of the new user submitted image
@@ -172,12 +172,12 @@ function getBulletList() {
 function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
     let aspectRatio, height, width, startX, startY;
 
-    // Get the aspect ratio, used so the picture always fits inside the canvas
+    // Get the aspect ratio, used so the picture always fits inside the CANVAS
     aspectRatio = imageWidth / imageHeight;
 
     // If the aspect ratio is less than 1 it's a vertical image
     if (aspectRatio < 1) {
-        // Height is the max possible given the canvas
+        // Height is the max possible given the CANVAS
         height = canvasHeight;
         // Width is then proportional given the height and aspect ratio
         width = canvasHeight * aspectRatio;
@@ -186,7 +186,7 @@ function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
         startX = (canvasWidth - width) / 2;
         // This is for horizontal images now
     } else {
-        // Width is the maximum width possible given the canvas
+        // Width is the maximum width possible given the CANVAS
         width = canvasWidth;
         // Height is then proportional given the width and aspect ratio
         height = canvasWidth / aspectRatio;
@@ -239,7 +239,7 @@ function processBullet(bullet, i) {
 }
 
 /**
- * Render the image at our current relative index and draw it on the canvas
+ * Render the image at our current relative index and draw it on the CANVAS
  * (photo album area)
  * @returns void
  */
@@ -248,14 +248,14 @@ function processCurrentImage() {
         return;
     }
 
-    canv.clearRect(0, 0, canvas.width, canvas.height);
+    CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
     const imgDimension = getDimensions(
-        canvas.width,
-        canvas.height,
+        CANVAS.width,
+        CANVAS.height,
         window.img[relative].width,
         window.img[relative].height
     );
-    canv.drawImage(
+    CANV.drawImage(
         window.img[relative],
         imgDimension['startX'],
         imgDimension['startY'],
@@ -304,11 +304,11 @@ function renderPhotos(photos) {
  * @returns void
  */
 async function requestDay() {
-    await getDay(currDateString).then((currDay) => {
+    await getDay(CURR_DATE_STRING).then((currDay) => {
         if (currDay === undefined) {
             currDay = {
                 bullets: [],
-                date: currDateString,
+                date: CURR_DATE_STRING,
                 notes: '',
                 photos: [],
             };
@@ -365,13 +365,13 @@ function toggleBulletStatus(obj) {
 function updateNotes() {
     const newNote = document.querySelector('note-box').entry.content;
     currentDay.notes = newNote;
-    updateNote(currDateString, newNote);
+    updateNote(CURR_DATE_STRING, newNote);
 }
 
 // ~~~~~~~~~~~~~~~ Event Listeners ~~~~~~~~~~~~~~~
 
 // the space in the template literal below is needed for proper rendering
-document.getElementById('date').innerHTML += ` ${currDateString}`;
+document.getElementById('date').innerHTML += ` ${CURR_DATE_STRING}`;
 
 // set back button
 document.getElementById('home').addEventListener('click', () => {
@@ -491,7 +491,7 @@ document.querySelector('.entry-form').addEventListener('submit', (submit) => {
 
 // ~~~~~~~~~~~~~~~ Image Event Listeners ~~~~~~~~~~~~~~~
 
-left.addEventListener('click', () => {
+LEFT_BUTTON.addEventListener('click', () => {
     // if there are no images, do nothing
     if (window.img.length === 0) {
         return;
@@ -501,7 +501,7 @@ left.addEventListener('click', () => {
     // (if the user clicks back on the first image, render the last image)
     relative = (relative - 1) % window.img.length;
 
-    canv.clearRect(0, 0, canvas.width, canvas.height);
+    CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
 
     // if there is no image at the 'last index' (ie the user deletes the only
     // image) don't render anything
@@ -510,7 +510,7 @@ left.addEventListener('click', () => {
     }
 });
 
-right.addEventListener('click', () => {
+RIGHT_BUTTON.addEventListener('click', () => {
     // if there are no images, do nothing
     if (window.img.length === 0) {
         return;
@@ -520,7 +520,7 @@ right.addEventListener('click', () => {
     // (if the user clicks forward on the last image, render the first image)
     relative = (relative + 1) % window.img.length;
 
-    canv.clearRect(0, 0, canvas.width, canvas.height);
+    CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
     // if there is no image at the 'last index' (ie the user deletes the only
     // image) don't render anything
     if (window.img[relative]) {
@@ -529,15 +529,15 @@ right.addEventListener('click', () => {
 });
 
 // save image that was chosen in file selector to db and display it
-// on image canvas
-save.addEventListener('click', async () => {
+// on image CANVAS
+SAVE_BUTTON.addEventListener('click', async () => {
     // if a file had not been loaded, do nothing
-    if (input.files === undefined) {
+    if (IMAGE_INPUT.files === undefined) {
         return;
     }
 
     // This allows you to store blob -> base64
-    const base64 = await getBase64(input.files[0]);
+    const base64 = await getBase64(IMAGE_INPUT.files[0]);
 
     if (!('photos' in currentDay)) {
         currentDay.photos = [];
@@ -550,11 +550,11 @@ save.addEventListener('click', async () => {
     relative = window.img.length;
     renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
 
-    input.value = null;
+    IMAGE_INPUT.value = null;
     updateDay(currentDay);
 });
 
-remove.addEventListener('click', async () => {
+DELETE_BUTTON.addEventListener('click', async () => {
     if (window.img[relative] === undefined) {
         return;
     }

@@ -8,7 +8,7 @@ import {
     updateYearlyGoals,
 } from '../Backend/BackendInit.js';
 
-const months = [
+const MONTHS = [
     'January',
     'February',
     'March',
@@ -23,10 +23,10 @@ const months = [
     'December',
 ];
 
-const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const dayOVLink = '../DailyOverview/DailyOverview.html';
-const yrStart = 2018;
-const yrEnd = 2025;
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_OV_LINK = '../DailyOverview/DailyOverview.html';
+const YEAR_START = 2018;
+const YEAR_END = 2025;
 
 // this month object keeps track of the month object from the db. this object
 // if constantly updated here and pushed to the database on change
@@ -402,7 +402,7 @@ async function setupCalendar(dateStr = undefined) {
     let monthLabel = document.createElement('p');
     monthLabel.classList.add('calMonthLabel');
     //the year header that when clicked will open dropdown
-    monthLabel.innerText = months[month];
+    monthLabel.innerText = MONTHS[month];
 
     let yearLabel = document.createElement('p');
     yearLabel.classList.add('calYearLabel');
@@ -428,10 +428,10 @@ async function setupCalendar(dateStr = undefined) {
     monthDropdown.classList.add('show-content');
     monthDropdown.id = 'dropdown';
     let monthSelect = document.createElement('ul');
-    for (let m = 0; m < months.length; m++) {
-        // setup names of months in dropdown
+    for (let m = 0; m < MONTHS.length; m++) {
+        // setup names of MONTHS in dropdown
         let monthLink = document.createElement('li');
-        monthLink.innerText = months[m];
+        monthLink.innerText = MONTHS[m];
         monthLink.classList.add('month-link');
         monthLink.onclick = function () {
             monthHeader.remove();
@@ -441,7 +441,7 @@ async function setupCalendar(dateStr = undefined) {
             setupCalendar(`${year}/${m + 1}`);
         };
 
-        // add this month to list of months
+        // add this month to list of MONTHS
         monthSelect.appendChild(monthLink);
     }
 
@@ -452,7 +452,7 @@ async function setupCalendar(dateStr = undefined) {
     yearDropdown.classList.add('show-content');
     yearDropdown.id = 'year-dropdown';
     let yearSelect = document.createElement('ul');
-    for (let y = yrStart; y <= yrEnd; y++) {
+    for (let y = YEAR_START; y <= YEAR_END; y++) {
         let yearLink = document.createElement('li');
         yearLink.innerText = y;
         yearLink.classList.add('month-link');
@@ -477,9 +477,9 @@ async function setupCalendar(dateStr = undefined) {
     // top bar of weekday names
     let weekdaysLabel = document.createElement('ul');
     weekdaysLabel.classList.add('calWeekdaysLabel');
-    for (let i = 0; i < weekdays.length; i++) {
+    for (let i = 0; i < WEEKDAYS.length; i++) {
         let weekday = document.createElement('li');
-        weekday.innerText = weekdays[i];
+        weekday.innerText = WEEKDAYS[i];
         weekday.classList.add('calWeekday');
         weekdaysLabel.appendChild(weekday);
     }
@@ -512,7 +512,7 @@ async function setupCalendar(dateStr = undefined) {
         const mm = monthNumber(month);
         const dd = dayNumber(i);
         const yr = year;
-        const href = `${dayOVLink}?date=${yr}/${mm}/${dd}`;
+        const href = `${DAY_OV_LINK}?date=${yr}/${mm}/${dd}`;
         day.addEventListener('click', () => {
             window.location.href = href;
         });
