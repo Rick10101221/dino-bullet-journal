@@ -12,8 +12,9 @@ describe('Google', () => {
 */
 
 describe('basic navigation for BJ', () => {
-    // change easier
-    const URL = 'http://127.0.0.1:5500';
+    // change link to deployment site
+    // const URL = 'http://127.0.0.1:5500';
+    const URL = 'https://testing-stegosource-9lives.web.app';
     const MONTHNAMES = [
         'January',
         'February',
