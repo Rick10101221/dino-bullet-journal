@@ -24,15 +24,14 @@ jobs:
           target: testing-stegosource-9lives
           # channelId is the different preview links (or "live" for the currently deployed)
           # "testing-sstegosource-9-lives" just a place holder to deploy to a temp link
-          channelId: testing-stegosource-9lives  
-        
-      - if: success()
-      - name: Install Node.js dependencies
-        run: npm ci
-
-      - name: Run Puppeteer tests
-      # can we just do 'npm test source/tests/sampleP.test.js'
-        run: npm test -c jest-puppeteer.config.js source/tests/PuppTests.test.js
+          channelId: testing-stegosource-9lives
+          
+  run_testing:
+      if: success()
+      runs-on: ubuntu-latest
+      steps:
+        - run: npm ci
+        - run: npm test -c jest-puppeteer.config.js source/tests/PuppTests.test.js
 
 
 
