@@ -3,7 +3,6 @@ NOTE: In order to find component-specific sections of CSS, search this document
 for our delimiter: ||
 */
 
-
 /* || General */
 
 * {
@@ -55,7 +54,6 @@ select {
     padding: 0px;
     width: 100vw;
 }
-
 
 /* || Header */
 
@@ -135,14 +133,12 @@ select {
     filter: brightness(50%);
 }
 
-
 /* || Rest of Content Other than Header */
 
 .content {
     display: grid;
     grid-template-columns: 4fr 3fr 3fr;
 }
-
 
 /* || Weekly Preview Panel */
 
@@ -184,7 +180,6 @@ select {
     grid-template-rows: 4fr 6fr;
 }
 
-
 /* || Notes Panel */
 
 #notes {
@@ -221,7 +216,6 @@ select {
     cursor: pointer;
     text-decoration: underline;
 }
-
 
 /* || Goal Reminder Panel */
 
@@ -275,7 +269,6 @@ select {
     top: 1px;
 }
 
-
 /* || Photo Album Block */
 
 li.image-wrapper {
@@ -324,7 +317,6 @@ ul.stage {
     white-space: nowrap;
 }
 
-
 /* || PFP/Settings */
 
 img.pwd-icon {
@@ -339,7 +331,7 @@ img.pwd-icon {
 .bannerImage {
     margin-top: 25px;
 }
- 
+
 #banImg {
     opacity: 0;
     position: absolute;

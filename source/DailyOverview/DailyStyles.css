@@ -3,7 +3,6 @@ NOTE: In order to find component-specific sections of CSS, search this document
 for our delimiter: ||
 */
 
-
 /* || General */
 
 * {
@@ -16,7 +15,6 @@ for our delimiter: ||
 ::-webkit-file-upload-button {
     cursor: pointer;
 }
-
 
 body {
     background-color: var(--bg-color);
@@ -41,7 +39,6 @@ h1 {
 h2 {
     font-size: 2vh;
 }
-
 
 /* || Header Block */
 
@@ -98,7 +95,6 @@ h2 {
     margin: 1vh;
 }
 
-
 /* || Todo Block */
 
 #entry-button {
@@ -143,7 +139,6 @@ h2 {
 #todo::-webkit-scrollbar {
     display: none; /* color of the tracking area */
 }
-
 
 /* || Note Block */
 
@@ -192,7 +187,6 @@ h2 {
     text-decoration: underline;
 }
 
-
 /* || Goal Reminder Block */
 
 #goalReminder {
@@ -239,7 +233,6 @@ h2 {
     position: sticky;
     top: 1px;
 }
-
 
 /* || Photo Album Block */
 
