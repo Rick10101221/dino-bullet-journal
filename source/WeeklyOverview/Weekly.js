@@ -79,9 +79,13 @@ function bulletParser(bullets, list) {
  * @param {String} text
  */
 function customAlert(text) {
-    const closeButtonHTML = '<span class="closebtn">&times;</span>';
+    const closeButtonHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>';
     document.querySelector('.alert').style.display = 'flex';
     document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
+    setTimeout(() => {
+        document.querySelector('.alert').style.display = 'none';
+    }, 3000);
 }
 
 function eventListenerSetup() {
@@ -202,9 +206,10 @@ function eventListenerSetup() {
 
     // add listener for saving notes
     const noteSave = document.getElementById('notes-save');
-    noteSave.addEventListener('click', () =>
-        updateNotes(`${month}/${day}/${year}`)
-    );
+    noteSave.addEventListener('click', () => {
+        updateNotes(`${month}/${day}/${year}`);
+        customAlert('Notes saved!');
+    });
 }
 
 /**

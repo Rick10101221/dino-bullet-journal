@@ -72,9 +72,13 @@ function bulletChangeResolution() {
  * @param {String} text
  */
 function customAlert(text) {
-    const closeButtonHTML = '<span class="closebtn">&times;</span>';
+    const closeButtonHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>';
     document.querySelector('.alert').style.display = 'flex';
     document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
+    setTimeout(() => {
+        document.querySelector('.alert').style.display = 'none';
+    }, 3000);
 }
 
 /**
@@ -386,7 +390,10 @@ document.getElementById('home').addEventListener('click', () => {
 
 // add listener for saving notes
 const noteSave = document.getElementById('notes-save');
-noteSave.addEventListener('click', () => updateNotes());
+noteSave.addEventListener('click', () => {
+    updateNotes();
+    customAlert('Notes saved!');
+});
 
 // ~~~~~~~~~~~~~~~ Bullet Event Listeners ~~~~~~~~~~~~~~~
 
