@@ -277,7 +277,7 @@ button#right {
 }
 
 #save:hover,
-#delete:hover {    
+#delete:hover {
     cursor: pointer;
     text-decoration: underline;
 }
