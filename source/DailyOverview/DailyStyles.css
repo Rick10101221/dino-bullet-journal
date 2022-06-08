@@ -179,7 +179,19 @@ h2 {
 #notes-save {
     height: fit-content;
     margin-right: 1.2vw;
+    background-color: white;
+    color: #38b593;
+    border-color: white;
+    font-size: 1.5vh;
+    box-shadow: none;
+    border-color: white;
+    border-style: solid;
     cursor: pointer;
+}
+
+#notes-save:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 

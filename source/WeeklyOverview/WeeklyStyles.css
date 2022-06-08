@@ -6,10 +6,14 @@ for our delimiter: ||
 
 /* || General */
 
+* {
+    font-family: 'Montserrat', Montserrat;
+    font-weight: bold;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', Montserrat;
 }
 
 img {
@@ -205,6 +209,7 @@ select {
     box-shadow: none;
     border-color: white;
     border-style: solid;
+    cursor: pointer;
 }
 
 #notes-save:hover {
