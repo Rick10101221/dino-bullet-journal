@@ -13,11 +13,11 @@ describe('Google', () => {
 
 /**
  * Note on developing/testing vs deployment testing
- * 
+ *
  * Since this suite of tests is run automatically run on push to the testing branch, the URL needs to change
  * on local testing with liveserver vs the testing URL can swap between the URL variable
  * Need to also change the original url in the 'beforeAll' statement, everything else should be ok
- * 
+ *
  */
 describe('basic navigation for BJ', () => {
     // change link to deployment site and for local testing
@@ -46,7 +46,7 @@ describe('basic navigation for BJ', () => {
 
         /* swap/uncomment the 2 lines below to switch between going to deployed site vs local */
         //await page.goto(URL + '/Login/Login.html');
-        await page.goto(URL); 
+        await page.goto(URL);
 
         await page.waitForTimeout(500);
     });
@@ -157,7 +157,6 @@ describe('basic navigation for BJ', () => {
 
         expect(`${entryLength == entryLengthPrev + 1}`).toMatch('true');
     });
-
 
     /*
     // TODO FIX
