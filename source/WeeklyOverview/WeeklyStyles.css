@@ -169,6 +169,12 @@ select {
     background: #c2f7b5;
 }
 
+#weekly-preview-top-border {
+    width: 100%;
+    border-width:2px;
+    border-color:black;
+}
+
 
 /* || Notes and Goal Reminder Panels */
 

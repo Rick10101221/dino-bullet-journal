@@ -104,16 +104,18 @@ function eventListenerSetup() {
     });
 
     // Change background color on select
-    document.getElementById('themes').addEventListener('change', function (e) {
-        document.getElementsByClassName('weekly_column')[0].style.background =
-            e.target.value;
-        document.getElementsByClassName('monthly_column')[0].style.background =
-            e.target.value;
-        document.getElementsByClassName('photo_column')[0].style.background =
-            e.target.value;
+    const themes = document.getElementById('themes');
+    themes.addEventListener('change', async function (e) {
+        const val = e.target.value;
+        document.querySelector('.weekly_column').style.background = val;
+        document.querySelector('.monthly_column').style.background = val;
+        document.querySelector('.photo_column').style.background = val;
 
         // update theme preference in DB
-        updateTheme(e.target.value);
+        await updateTheme(e.target.value);
+
+        // re-load pages theme
+        loadTheme();
     });
 
     // update profile image
@@ -285,6 +287,7 @@ async function loadTheme() {
     )[0].style.background = theme;
     document.getElementsByClassName('photo_column')[0].style.background = theme;
     document.getElementById('themes').value = theme;
+    document.getElementById('notes-save').style.color = theme;
 }
 
 /**
