@@ -213,11 +213,14 @@ async function loadTheme() {
 
     document.querySelector('body').style.backgroundColor = userTheme;
     document.getElementById('notes-save').style.color = userTheme;
-    document.getElementById('delete').style.color = userTheme;
-    document.getElementById('image-input').style.color = userTheme;
-    document.getElementById('left').style.color = userTheme;
-    document.getElementById('right').style.color = userTheme;
-    document.getElementById('save').style.color = userTheme;
+
+    // Colors are hard to see with colors, so we do not attach the userTheme
+    // to them
+    // document.getElementById('delete').style.color = userTheme;
+    // document.getElementById('image-input').style.color = userTheme;
+    // document.getElementById('left').style.color = userTheme;
+    // document.getElementById('right').style.color = userTheme;
+    // document.getElementById('save').style.color = userTheme;
 }
 
 /**
