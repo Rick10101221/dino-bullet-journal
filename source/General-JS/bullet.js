@@ -1,4 +1,10 @@
 // <bullet-entry> custom web component
+const starSvg = '../DailyOverview/Images/Star.svg';
+const pencilSvg = '../DailyOverview/Images/Pencil.svg';
+const houseSvg = './../DailyOverview/Images/House.svg';
+const heartSvg = '../DailyOverview/Images/Heart.svg';
+const eventSvg = '../DailyOverview/Images/Event.svg';
+
 class BulletEntry extends HTMLElement {
     constructor() {
         super();
@@ -275,44 +281,28 @@ class BulletEntry extends HTMLElement {
             .getElementById(entry.features)
             .setAttribute('selected', 'true');
 
+        const ul = this.shadowRoot.querySelector('ul');
         switch (entry.features) {
             case 'normal':
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    'none';
+                ul.style.listStyleImage = 'none';
                 break;
             case 'important': // star icon
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    // required to use double quotes below due to inner single quotes
-                    // eslint-disable-next-line quotes
-                    "url('./../DailyOverview/Images/Star.svg')";
+                ul.style.listStyleImage = `url(${starSvg})`;
                 break;
             case 'workRelated': // pencil
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    // required to use double quotes below due to inner single quotes
-                    // eslint-disable-next-line quotes
-                    "url('./../DailyOverview/Images/Pencil.svg')";
+                ul.style.listStyleImage = `url(${pencilSvg})`;
                 break;
             case 'household': // house
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    // required to use double quotes below due to inner single quotes
-                    // eslint-disable-next-line quotes
-                    "url('./../DailyOverview/Images/House.svg')";
+                ul.style.listStyleImage = `url(${houseSvg})`;
                 break;
             case 'personal': // heart
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    // required to use double quotes below due to inner single quotes
-                    // eslint-disable-next-line quotes
-                    "url('./../DailyOverview/Images/Heart.svg')";
+                ul.style.listStyleImage = `url(${heartSvg})`;
                 break;
             case 'event': // heart
-                this.shadowRoot.querySelector('ul').style.listStyleImage =
-                    // required to use double quotes below due to inner single quotes
-                    // eslint-disable-next-line quotes
-                    "url('./../DailyOverview/Images/Event.svg')";
+                ul.style.listStyleImage = `url(${eventSvg})`;
                 break;
             case 'other': // square
-                this.shadowRoot.querySelector('ul').style.listStyleType =
-                    'square';
+                ul.style.listStyleType = 'square';
                 break;
         }
     }

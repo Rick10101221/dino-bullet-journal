@@ -190,7 +190,6 @@ function signIn() {
 /**
  * New user sign up with email and password given.
  */
-// eslint-disable-next-line no-unused-vars
 function signUp() {
     let userEmail = document.getElementById('email').value;
     let password = document.getElementById('pin').value;
@@ -227,7 +226,6 @@ function signUp() {
                     };
 
                     // add user data to db
-                    // eslint-disable-next-line no-undef
                     set(ref(db, `${user.uid}`), data).then(() => {
                         customAlert('Successful Sign Up');
                         window.location.replace(
