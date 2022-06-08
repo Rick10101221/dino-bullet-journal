@@ -143,6 +143,7 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
         const popup_cancel = document.getElementById('cancel-note');
         const popup_submit = document.getElementById('submit-note');
         popup.style.display = 'block';
+        popup_text.focus();
         popup_cancel.onclick = function () {
             popup_text.value = '';
             popup.style.display = 'none';
@@ -153,6 +154,11 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
                 popup_submit.style.backgroundColor = '#39b594';
             } else {
                 popup_submit.style.backgroundColor = '#a9c7bf';
+            }
+        });
+        popup_text.addEventListener('keypress', (e) => {
+            if (e.key == 'Enter') {
+                popup_submit.dispatchEvent(new Event('click'));
             }
         });
     };
