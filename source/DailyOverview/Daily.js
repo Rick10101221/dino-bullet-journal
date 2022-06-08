@@ -309,6 +309,7 @@ async function requestDay() {
         // Load in notes
         const newNote = document.createElement('note-box');
         newNote.entry = currentDay.notes.content || currentDay.notes || '';
+        newNote.shadowRoot.querySelector('.noteContent').style.height = '66vh';
         document.querySelector('#notes').appendChild(newNote);
 
         // Load photos
