@@ -33,12 +33,15 @@ const currDateString = `${month}/${day}/${year}`;
 
 let relative = 0; // index used for accessing images
 
-// store current day data to update when user leaves page
+// stores all db data for the current day. this is constantly updated and
+// pushed to the db to reflect iterative changes throughout the user's
+// session with daily.js
 let currentDay;
 
 window.onload = async () => {
-    // get the day and also the monthly and yearly goals
+    // load page's theme based on user's selected theme from weekly overview
     loadTheme();
+    // get the day and also the monthly and yearly goals
     requestDay();
     fetchGoals(
         await getMonthlyGoals(`${month}/${year}`),
@@ -72,7 +75,7 @@ async function fetchGoals(goalsObj, listId, newClass) {
         return;
     }
 
-    //load in bullets
+    // load in bullets
     // eslint-disable-next-line no-unused-vars
     for (const [_, goal] of Object.entries(goalsObj)) {
         const goalElem = document.createElement('p');
@@ -85,6 +88,7 @@ async function fetchGoals(goalsObj, listId, newClass) {
         if (goal.done == true) {
             goalElem.style.textDecoration = 'line-through';
         }
+
         goalElem.classList.add(newClass);
         document.querySelector(listId).appendChild(goalElem);
     }
@@ -100,7 +104,6 @@ async function fetchGoals(goalsObj, listId, newClass) {
  */
 function generalBulletListener(e, callback) {
     const index = JSON.parse(e.composedPath()[0].getAttribute('index'));
-    // i don't like this code at all really, it seems very hard-coding and limits our children levels to 2?
     const firstIndex = index[0];
     if (index.length > 1) {
         const secondIndex = index[1];
@@ -120,7 +123,7 @@ function generalBulletListener(e, callback) {
 /**
  * Call any arbitrary function on a list with an arbitrary number of
  * arguments
- * @param {Array} list - yeah
+ * @param {Array} list - Any list object
  * @param {Function} func - function to call on list with funcArgs
  * @param  {...any} funcArgs - arguments for func
  * @returns void
@@ -153,15 +156,18 @@ function getBulletList() {
 }
 
 /**
- * Takes in the dimensions of the canvas and the new image, then calculates the new
- * dimensions of the image so that it fits perfectly into the Canvas and maintains aspect ratio
+ * Takes in the dimensions of the canvas and the new image, then calculates the
+ * new dimensions of the image so that it fits perfectly into the Canvas and
+ * maintains aspect ratio
  * @param {number} canvasWidth Width of the canvas element to insert image into
- * @param {number} canvasHeight Height of the canvas element to insert image into
+ * @param {number} canvasHeight Height of the canvas element to insert image
+ * into
  * @param {number} imageWidth Width of the new user submitted image
  * @param {number} imageHeight Height of the new user submitted image
- * @returns {Object} An object containing four properties: The newly calculated width and height,
- * and also the starting X and starting Y coordinate to be used when you draw the new image to the
- * Canvas. These coordinates align with the top left of the image.
+ * @returns {Object} An object containing four properties: The newly calculated
+ * width and height, and also the starting X and starting Y coordinate to be
+ * used when you draw the new image to the Canvas. These coordinates align with
+ * the top left of the image.
  */
 function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
     let aspectRatio, height, width, startX, startY;
@@ -184,7 +190,8 @@ function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
         width = canvasWidth;
         // Height is then proportional given the width and aspect ratio
         height = canvasWidth / aspectRatio;
-        // Start the X at the very left since it's max width, but center the height
+        // Start the X at the very left since it's max width, but center the
+        // height
         startX = 0;
         startY = (canvasHeight - height) / 2;
     }
@@ -192,8 +199,14 @@ function getDimensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
     return { width: width, height: height, startX: startX, startY: startY };
 }
 
+/**
+ * Load the user's theme that is stored in the db and set the main page's
+ * background color to this theme
+ * @returns void
+ */
 async function loadTheme() {
     const userTheme = await getTheme();
+    // if the user does not have a theme, use a default white background
     if (userTheme === undefined) {
         return;
     }
@@ -276,7 +289,6 @@ function renderBullets(bullets) {
  * @param {Object} photos takes in photo object
  * @return nothing
  */
-// eslint-disable-next-line no-unused-vars
 function renderPhotos(photos) {
     for (let i = 0; i < photos.length; i++) {
         window.img[i] = new Image();
@@ -406,6 +418,7 @@ document.querySelector('#bullets').addEventListener('deleted', function (e) {
         }
     };
 
+    // sets up event listener for bullet when it is deleted
     generalBulletListener(e, callback);
 });
 
@@ -418,6 +431,7 @@ document.querySelector('#bullets').addEventListener('done', function (e) {
         generalOp(list, toggleBulletStatus, list);
     };
 
+    // sets up event listener for bullet when it is marked as done
     generalBulletListener(e, callback);
 });
 
@@ -432,6 +446,7 @@ document.querySelector('#bullets').addEventListener('edited', function (e) {
         generalOp(list, setBulletText, list, newText);
     };
 
+    // sets up event listener for bullet when it is edited
     generalBulletListener(e, callback);
 });
 
@@ -446,11 +461,12 @@ document.querySelector('#bullets').addEventListener('features', function (e) {
         generalOp(list, setBulletFeature, list, newFeature);
     };
 
+    // sets up event listener for bullet when its feature is altered
     generalBulletListener(e, callback);
 });
 
 document.querySelector('.entry-form').addEventListener('submit', (submit) => {
-    submit.preventDefault();
+    submit.preventDefault(); // prevent page refresh on button press
     const bText = document.querySelector('.entry-form-text').value;
     if (bText === undefined || bText === '') {
         return;
@@ -476,26 +492,37 @@ document.querySelector('.entry-form').addEventListener('submit', (submit) => {
 // ~~~~~~~~~~~~~~~ Image Event Listeners ~~~~~~~~~~~~~~~
 
 left.addEventListener('click', () => {
+    // if there are no images, do nothing
     if (window.img.length === 0) {
         return;
     }
 
+    // if the left button is selected, wrap the index around to the last index
+    // (if the user clicks back on the first image, render the last image)
     relative = (relative - 1) % window.img.length;
 
     canv.clearRect(0, 0, canvas.width, canvas.height);
+
+    // if there is no image at the 'last index' (ie the user deletes the only
+    // image) don't render anything
     if (window.img[relative]) {
         processCurrentImage();
     }
 });
 
 right.addEventListener('click', () => {
+    // if there are no images, do nothing
     if (window.img.length === 0) {
         return;
     }
 
+    // if the right button is selected, wrap the index around to the first index
+    // (if the user clicks forward on the last image, render the first image)
     relative = (relative + 1) % window.img.length;
 
     canv.clearRect(0, 0, canvas.width, canvas.height);
+    // if there is no image at the 'last index' (ie the user deletes the only
+    // image) don't render anything
     if (window.img[relative]) {
         processCurrentImage();
     }
@@ -504,6 +531,7 @@ right.addEventListener('click', () => {
 // save image that was chosen in file selector to db and display it
 // on image canvas
 save.addEventListener('click', async () => {
+    // if a file had not been loaded, do nothing
     if (input.files === undefined) {
         return;
     }
@@ -517,6 +545,8 @@ save.addEventListener('click', async () => {
 
     currentDay.photos.push(base64);
 
+    // we save an image to the very end of our image array, so set the current
+    // index of the image we want to render to the very end of the list
     relative = window.img.length;
     renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
 
@@ -529,10 +559,12 @@ remove.addEventListener('click', async () => {
         return;
     }
 
+    // get the current photo's index and remove it from our current day object
     const dbPhotoIdx = currentDay.photos.indexOf(window.img[relative].src);
     currentDay.photos.splice(dbPhotoIdx, 1);
     window.img.splice(relative, 1);
 
+    // render the first image in our array after deletion
     relative = 0;
     renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
 

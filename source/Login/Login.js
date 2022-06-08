@@ -52,7 +52,6 @@ function googleSignIn() {
                         email: user.email,
                         theme: '#d4ffd4',
                     };
-                    // eslint-disable-next-line no-undef
                     set(ref(db, `${user.uid}`), data).then(() => {
                         customAlert('Successfully signed in!');
                         window.location.replace(
@@ -79,6 +78,9 @@ function googleSignIn() {
     });
 }
 
+/**
+ * Set up event listeners for various login/signup buttons
+ */
 function loginSignUpSetup() {
     const loginBtn = document.getElementById('login-button');
 
@@ -92,7 +94,8 @@ function loginSignUpSetup() {
         });
     }
 
-    // login / signup event depending on button texts
+    // trigger login / signup event depending on what mode the page is in
+    // (either login or signup mode)
     loginBtn.onclick = () => {
         if (loginBtn.innerText === 'LOGIN') {
             signIn();
@@ -101,7 +104,7 @@ function loginSignUpSetup() {
         }
     };
 
-    // change view of login and signup
+    // change view of login and signup if the sign up button is clicked
     const signupBtn = document.getElementById('signup-button');
     signupBtn.onclick = () => {
         if (signupBtn.innerText === 'LOGIN') {
@@ -162,7 +165,7 @@ function signIn() {
     let userEmail = document.getElementById('email').value;
     let password = document.getElementById('pin').value;
 
-    // validity check lol
+    // validity check
     if (!isValidEmail(userEmail)) {
         customAlert('Invalid Email!');
         return;
@@ -239,6 +242,9 @@ function signUp() {
     });
 }
 
+/**
+ * Toggle the eye logo depending on its current state
+ */
 function togglePasswordSetup() {
     const togPassword = document.querySelector('.right-icons');
     const password = document.querySelector('.pass');

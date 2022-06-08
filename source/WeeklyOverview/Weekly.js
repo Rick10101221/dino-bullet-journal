@@ -137,6 +137,7 @@ function eventListenerSetup() {
     });
 
     const calendarButton = document.getElementById('header_calendar_button');
+    // redirect to calendar page if user clicks on calendar icon
     calendarButton.addEventListener('click', () => {
         window.location.replace('../Calendar/Calendar.html');
     });
@@ -147,6 +148,7 @@ function eventListenerSetup() {
         let new_pwd = document.getElementById('new').value;
         let retype_pwd = document.getElementById('retype').value;
 
+        // if any of the password fields are empty, throw an error
         if (old_pwd === '' || new_pwd === '' || retype_pwd === '') {
             alert('A password field is empty. Please try again');
         }
@@ -183,7 +185,8 @@ function eventListenerSetup() {
     const headerDate = document.getElementById('header_date');
     const { day, month, year } = currDateObj;
     headerDate.innerHTML = `${getMonthName(month)} ${day}, ${year}`;
-    // clicking main date header on weekly overview will navigate to daily overview
+    // clicking main date header on weekly overview will navigate to daily
+    // overview
     headerDate.addEventListener('click', () => {
         window.location.replace('../DailyOverview/DailyOverview.html');
     });
@@ -256,7 +259,7 @@ async function loadNotes(currDateObj) {
 async function loadProfileImage() {
     let proImg = await getProfileImage();
 
-    // only change if user does upload their image
+    // only change profile picture if user does upload their image
     if (proImg !== 'default' && proImg !== undefined) {
         document.getElementById('proImg-label-pic').src = `${proImg}`;
         document.getElementById('profile-btn-img').src = `${proImg}`;
@@ -269,7 +272,8 @@ async function loadProfileImage() {
 }
 
 /**
- * Set user theme with their preference
+ * Set various background properties around weekly page to the user's selected
+ * theme in the backend
  */
 async function loadTheme() {
     let theme = await getTheme();
