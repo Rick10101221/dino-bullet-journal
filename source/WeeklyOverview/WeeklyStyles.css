@@ -204,9 +204,8 @@ select {
     border-color: white;
     border-style: solid;
     box-shadow: none;
-    color: #38b593;
     cursor: pointer;
-    font-size: 1.5vh;
+    font-size: 2vh;
     height: fit-content;
     margin-right: 1.2vw;
 }

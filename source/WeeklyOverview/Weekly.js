@@ -287,7 +287,7 @@ async function loadTheme() {
     )[0].style.background = theme;
     document.getElementsByClassName('photo_column')[0].style.background = theme;
     document.getElementById('themes').value = theme;
-    document.getElementById('notes-save').style.color = theme;
+    // document.getElementById('notes-save').style.color = theme;
 }
 
 /**
