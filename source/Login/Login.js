@@ -279,7 +279,7 @@ function forgetPassword() {
         forgetPopup.style.display = 'block';
     });
 
-    // submit email 
+    // submit email
     subEmailBtn.addEventListener('click', function () {
         forgetPopup.style.display = 'none';
     });
@@ -289,4 +289,3 @@ function forgetPassword() {
         forgetPopup.style.display = 'none';
     });
 }
-
