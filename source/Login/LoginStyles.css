@@ -231,7 +231,7 @@ input[type='email']:focus {
 }
 
 .vert-center {
-  text-align: center;
+    text-align: center;
 }
 
 #signup-button:hover,
