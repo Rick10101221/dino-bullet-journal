@@ -2,7 +2,9 @@ import {
     GoogleAuthProvider,
     browserSessionPersistence,
     createUserWithEmailAndPassword,
+    fetchSignInMethodsForEmail,
     getAdditionalUserInfo,
+    sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signInWithPopup,
 } from '../Backend/firebase-src/firebase-auth.min.js';
@@ -29,6 +31,33 @@ function customAlert(text) {
         '</span>';
     document.querySelector('.alert').style.display = 'block';
     document.querySelector('.alert').innerHTML = `${closeButtonHTML}${text}`;
+}
+
+/**
+ * Send password reset email to the given email
+ */
+function handleForgotPassword() {
+    return new Promise((resolve, reject) => {
+        let email = document.getElementById('forget-popup-text').value;
+
+        if (isValidEmail(email)) {
+            // check if email exists
+            fetchSignInMethodsForEmail(auth, email).then((signInMethods) => {
+                // exist -> send reset password email
+                if (signInMethods.length > 0) {
+                    sendPasswordResetEmail(auth, email)
+                        .then(() => {
+                            customAlert('Password reset email sent!');
+                            resolve();
+                        })
+                        .catch((err) => customAlert(err.message));
+                } else {
+                    customAlert('Email does not exist');
+                    reject();
+                }
+            });
+        }
+    });
 }
 
 /**
@@ -71,13 +100,6 @@ function googleSignIn() {
                 }
             })
             .catch((error) => {
-                // Handle Errors here.
-                // const errorCode = error.code;
-                // const errorMessage = error.message;
-                // The email of the user's account used.
-                // const email = error.customData.email;
-                // The AuthCredential type that was used.
-                // const credential = GoogleAuthProvider.credentialFromError(error);
                 customAlert(error.message);
             });
     });
@@ -122,6 +144,10 @@ function loginSignUpSetup() {
     // login event with Google authentication
     const googleLoginBtn = document.getElementById('google-button');
     googleLoginBtn.addEventListener('click', () => googleSignIn());
+
+    // forgot password event
+    const forgotPwdSubmitBtn = document.getElementById('submit-email');
+    forgotPwdSubmitBtn.addEventListener('click', () => handleForgotPassword());
 }
 
 /**
@@ -281,7 +307,7 @@ function forgetPassword() {
 
     // submit email
     subEmailBtn.addEventListener('click', function () {
-        forgetPopup.style.display = 'none';
+        handleForgotPassword().then(() => (forgetPopup.style.display = 'none'));
     });
 
     // close pop up
