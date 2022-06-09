@@ -13,6 +13,7 @@ import { ref, set } from '../Backend/firebase-src/firebase-database.min.js';
 window.onload = () => {
     loginSignUpSetup();
     togglePasswordSetup();
+    forgetPassword();
 };
 
 /**
@@ -263,3 +264,29 @@ function togglePasswordSetup() {
         }
     });
 }
+
+/**
+ * Forgot password to send email a reset password
+ */
+function forgetPassword() {
+    let forgetButton = document.getElementById('forget-button');
+    let forgetPopup = document.getElementById('forget-popup');
+    let subEmailBtn = document.getElementById('submit-email');
+    let canForBtn = document.getElementById('cancel-forget');
+
+    // pull up forgot password pop up
+    forgetButton.addEventListener('click', function () {
+        forgetPopup.style.display = 'block';
+    });
+
+    // submit email 
+    subEmailBtn.addEventListener('click', function () {
+        forgetPopup.style.display = 'none';
+    });
+
+    // close pop up
+    canForBtn.addEventListener('click', function () {
+        forgetPopup.style.display = 'none';
+    });
+}
+
