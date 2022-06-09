@@ -144,10 +144,6 @@ function loginSignUpSetup() {
     // login event with Google authentication
     const googleLoginBtn = document.getElementById('google-button');
     googleLoginBtn.addEventListener('click', () => googleSignIn());
-
-    // forgot password event
-    const forgotPwdSubmitBtn = document.getElementById('submit-email');
-    forgotPwdSubmitBtn.addEventListener('click', () => handleForgotPassword());
 }
 
 /**
