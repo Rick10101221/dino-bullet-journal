@@ -283,7 +283,7 @@ button#right {
     cursor: pointer;
 }
 
-#save{
+#save {
     position: absolute;
     height: fit-content;
     background-color: white;
