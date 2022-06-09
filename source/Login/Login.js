@@ -40,23 +40,29 @@ function handleForgotPassword() {
     return new Promise((resolve, reject) => {
         let email = document.getElementById('forget-popup-text').value;
 
-        if (isValidEmail(email)) {
-            // check if email exists
-            fetchSignInMethodsForEmail(auth, email).then((signInMethods) => {
-                // exist -> send reset password email
-                if (signInMethods.length > 0) {
-                    sendPasswordResetEmail(auth, email)
-                        .then(() => {
-                            customAlert('Password reset email sent!');
-                            resolve();
-                        })
-                        .catch((err) => customAlert(err.message));
-                } else {
-                    customAlert('Email does not exist');
-                    reject();
-                }
-            });
+        if (!isValidEmail(email)) {
+            customAlert('Invalid Email');
+            reject();
         }
+
+        // check if email exists
+        fetchSignInMethodsForEmail(auth, email).then((signInMethods) => {
+            // exist -> send reset password email
+            if (signInMethods.length > 0) {
+                sendPasswordResetEmail(auth, email)
+                    .then(() => {
+                        customAlert('Password reset email sent!');
+                        resolve();
+                    })
+                    .catch((err) => {
+                        customAlert(err.message);
+                        reject();
+                    });
+            } else {
+                customAlert('Email does not exist');
+                reject();
+            }
+        });
     });
 }
 
