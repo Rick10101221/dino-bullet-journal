@@ -1,9 +1,9 @@
 // <bullet-entry> custom web component
-const STAR_SVG = '../DailyOverview/Images/Star.svg';
-const PENCIL_SVG = '../DailyOverview/Images/Pencil.svg';
-const HOUSE_SVG = './../DailyOverview/Images/House.svg';
-const HEART_SVG = '../DailyOverview/Images/Heart.svg';
-const EVENT_SVG = '../DailyOverview/Images/Event.svg';
+const STAR_SVG = '../DailyOverview/images/Star.svg';
+const PENCIL_SVG = '../DailyOverview/images/Pencil.svg';
+const HOUSE_SVG = './../DailyOverview/images/House.svg';
+const HEART_SVG = '../DailyOverview/images/Heart.svg';
+const EVENT_SVG = '../DailyOverview/images/Event.svg';
 
 class BulletEntry extends HTMLElement {
     constructor() {
@@ -104,10 +104,10 @@ class BulletEntry extends HTMLElement {
                             <button id="dropdownHover" class="dropdownButton">v</button>
                             <div class="dropdown">
                                 <div class="row">
-                                    <p id="edit"><img src="../DailyOverview/Images/Edit.svg" alt="Edit"></p>
-                                    <p id="delete"><img src="../DailyOverview/Images/Delete.svg" alt="Delete"></p>
-                                    <p id="add"><img src="../DailyOverview/Images/Add.svg" alt="Add"></p>
-                                    <p id="done"><img src="../DailyOverview/Images/Done.svg" alt="Done"></p>
+                                    <p id="edit"><img src="../DailyOverview/images/Edit.svg" alt="Edit"></p>
+                                    <p id="delete"><img src="../DailyOverview/images/Delete.svg" alt="Delete"></p>
+                                    <p id="add"><img src="../DailyOverview/images/Add.svg" alt="Add"></p>
+                                    <p id="done"><img src="../DailyOverview/images/Done.svg" alt="Done"></p>
                                 </div>
                                 <div class="featuresContainer">
                                     <select id="features"> 
