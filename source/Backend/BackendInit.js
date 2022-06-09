@@ -9,7 +9,7 @@ import {
 } from './firebase-src/firebase-database.min.js';
 
 // see getMonthName()
-const monthNames = [
+const MONTH_NAMES = [
     'January',
     'February',
     'March',
@@ -25,10 +25,10 @@ const monthNames = [
 ];
 
 // regular expression testing on the password
-const upperCasePattern = /(?=.*?[A-Z])/;
-const lowcasePattern = /(?=.*?[a-z])/;
-const digitPattern = /(?=.*?[0-9])/;
-const specCharPattern = /(?=.*?[#?!@$%^&*-])/;
+const UPPER_CASE_PATTERN = /(?=.*?[A-Z])/;
+const LOWER_CASE_PATTERN = /(?=.*?[a-z])/;
+const DIGIT_PATTERN = /(?=.*?[0-9])/;
+const SPECIAL_CHAR_PATTERN = /(?=.*?[#?!@$%^&*-])/;
 
 /**
  * add a base64 encoded photo in the database
@@ -234,8 +234,6 @@ function getCurrentDate() {
         year: String(today.getFullYear()),
     };
 
-    console.log(dateObj);
-
     return dateObj;
 }
 
@@ -313,7 +311,7 @@ async function getDay(dateStr) {
  * @returns name of the corresponding month
  */
 function getMonthName(monthNumber) {
-    return monthNames[parseInt(monthNumber) - 1];
+    return MONTH_NAMES[parseInt(monthNumber) - 1];
 }
 
 /**
@@ -421,13 +419,13 @@ function isValidEmail(userEmail) {
 function isValidPassword(password) {
     if (password.length < 8) {
         return 'Password length must be at least eight!';
-    } else if (!upperCasePattern.test(password)) {
+    } else if (!UPPER_CASE_PATTERN.test(password)) {
         return 'Password must contain an upper case!';
-    } else if (!lowcasePattern.test(password)) {
+    } else if (!LOWER_CASE_PATTERN.test(password)) {
         return 'Password must contain a lower case!';
-    } else if (!digitPattern.test(password)) {
+    } else if (!DIGIT_PATTERN.test(password)) {
         return 'Password must contain a digit!';
-    } else if (!specCharPattern.test(password)) {
+    } else if (!SPECIAL_CHAR_PATTERN.test(password)) {
         return 'Password must contain a special character!';
     }
     return '';

@@ -25,7 +25,7 @@ import {
 
 import { auth } from '../Backend/FirebaseInit.js';
 
-const currDateObj = getCurrentDate();
+const CURR_DATE_OBJ = getCurrentDate();
 const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
 
 /**
@@ -120,16 +120,18 @@ function eventListenerSetup() {
     });
 
     // Change background color on select
-    document.getElementById('themes').addEventListener('change', function (e) {
-        document.getElementsByClassName('weekly_column')[0].style.background =
-            e.target.value;
-        document.getElementsByClassName('monthly_column')[0].style.background =
-            e.target.value;
-        document.getElementsByClassName('photo_column')[0].style.background =
-            e.target.value;
+    const themes = document.getElementById('themes');
+    themes.addEventListener('change', async function (e) {
+        const val = e.target.value;
+        document.querySelector('.weekly_column').style.background = val;
+        document.querySelector('.monthly_column').style.background = val;
+        document.querySelector('.photo_column').style.background = val;
 
         // update theme preference in DB
-        updateTheme(e.target.value);
+        await updateTheme(e.target.value);
+
+        // re-load pages theme
+        loadTheme();
     });
 
     // update profile image
@@ -153,6 +155,7 @@ function eventListenerSetup() {
     });
 
     const calendarButton = document.getElementById('header_calendar_button');
+    // redirect to calendar page if user clicks on calendar icon
     calendarButton.addEventListener('click', () => {
         window.location.replace('../Calendar/Calendar.html');
     });
@@ -163,6 +166,7 @@ function eventListenerSetup() {
         let new_pwd = document.getElementById('new').value;
         let retype_pwd = document.getElementById('retype').value;
 
+        // if any of the password fields are empty, throw an error
         if (old_pwd === '' || new_pwd === '' || retype_pwd === '') {
             alert('A password field is empty. Please try again');
         }
@@ -197,9 +201,10 @@ function eventListenerSetup() {
 
     // make the date header of the page reflect the current date
     const headerDate = document.getElementById('header_date');
-    const { day, month, year } = currDateObj;
+    const { day, month, year } = CURR_DATE_OBJ;
     headerDate.innerHTML = `${getMonthName(month)} ${day}, ${year}`;
-    // clicking main date header on weekly overview will navigate to daily overview
+    // clicking main date header on weekly overview will navigate to daily
+    // overview
     headerDate.addEventListener('click', () => {
         window.location.replace('../DailyOverview/DailyOverview.html');
     });
@@ -273,7 +278,7 @@ async function loadNotes(currDateObj) {
 async function loadProfileImage() {
     let proImg = await getProfileImage();
 
-    // only change if user does upload their image
+    // only change profile picture if user does upload their image
     if (proImg !== 'default' && proImg !== undefined) {
         document.getElementById('proImg-label-pic').src = `${proImg}`;
         document.getElementById('profile-btn-img').src = `${proImg}`;
@@ -286,7 +291,8 @@ async function loadProfileImage() {
 }
 
 /**
- * Set user theme with their preference
+ * Set various background properties around weekly page to the user's selected
+ * theme in the backend
  */
 async function loadTheme() {
     let theme = await getTheme();
@@ -298,6 +304,7 @@ async function loadTheme() {
     )[0].style.background = theme;
     document.getElementsByClassName('photo_column')[0].style.background = theme;
     document.getElementById('themes').value = theme;
+    // document.getElementById('notes-save').style.color = theme;
 }
 
 /**
@@ -405,6 +412,6 @@ window.onload = async () => {
     loadBannerImage();
     loadProfileImage();
     loadWeek();
-    loadNotes(currDateObj);
-    loadGoalReminders(currDateObj);
+    loadNotes(CURR_DATE_OBJ);
+    loadGoalReminders(CURR_DATE_OBJ);
 };
