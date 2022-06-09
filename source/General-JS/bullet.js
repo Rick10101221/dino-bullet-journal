@@ -1,9 +1,9 @@
 // <bullet-entry> custom web component
-const STAR_SVG = '../DailyOverview/Images/Star.svg';
-const PENCIL_SVG = '../DailyOverview/Images/Pencil.svg';
-const HOUSE_SVG = './../DailyOverview/Images/House.svg';
-const HEART_SVG = '../DailyOverview/Images/Heart.svg';
-const EVENT_SVG = '../DailyOverview/Images/Event.svg';
+const STAR_SVG = '../DailyOverview/images/Star.svg';
+const PENCIL_SVG = '../DailyOverview/images/Pencil.svg';
+const HOUSE_SVG = './../DailyOverview/images/House.svg';
+const HEART_SVG = '../DailyOverview/images/Heart.svg';
+const EVENT_SVG = '../DailyOverview/images/Event.svg';
 
 class BulletEntry extends HTMLElement {
     constructor() {
