@@ -20,10 +20,14 @@ window.onload = () => {
  * @param {String} text
  */
 function customAlert(text) {
+    const closeButtonHTML =
+        '<span ' +
+        'class="closebtn" ' +
+        'onclick="this.parentElement.style.display=\'none\';"> ' +
+        '&times;' +
+        '</span>';
     document.querySelector('.alert').style.display = 'block';
-    document.querySelector('.alert').innerHTML =
-        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>' +
-        text;
+    document.querySelector('.alert').innerHTML = `${closeButtonHTML}${text}`;
 }
 
 /**

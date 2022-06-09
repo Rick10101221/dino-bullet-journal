@@ -19,8 +19,8 @@ for our delimiter: ||
 body {
     background-color: var(--bg-color);
     display: grid;
-    grid-template-columns: 30% 10% 17%;
     justify-items: stretch;
+    grid-template-columns: 30% 10% 25%;
 
     /* mess around by removing one column/row of the grid */
     grid-template-areas:
@@ -41,6 +41,37 @@ h2 {
 }
 
 /* || Header Block */
+
+.alert {
+    background-color: #38b593;
+    color: white;
+    display: none;
+    justify-content: space-between;
+    left: 0px;
+    margin-bottom: 15px;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    right: 0px;
+    z-index: 1;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 10%;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
 
 #date {
     display: block;
@@ -150,6 +181,7 @@ h2 {
     border-width: 1mm;
     grid-area: note;
     height: 75vh;
+    margin-bottom: 0.5vw;
     margin: 1vw;
     min-height: 35vw;
     padding: 1vw;
@@ -233,6 +265,7 @@ h2 {
     top: 1px;
 }
 
+
 /* || Photo Album Block */
 
 button#left,
@@ -244,7 +277,7 @@ button#right {
 
 #myCanvas {
     border: 2px solid #000000;
-    height: 70%;
+    height: 65%;
     width: 100%;
 }
 
@@ -255,6 +288,8 @@ button#right {
     border-style: solid;
     border-width: 1mm;
     grid-area: album;
+    height: 38.5vh;
+    margin-top: 0.5vw;
     margin: 1vw;
     padding-left: 0.8vw;
     padding-right: 0.8vw;
@@ -263,16 +298,33 @@ button#right {
 #delete,
 #image-input,
 #left,
-#right,
+#right {
+    cursor: pointer;
+}
+
 #save {
     background-color: white;
     border-color: white;
     border-style: solid;
     box-shadow: none;
-    color: black;
     cursor: pointer;
     font-size: 1.5vh;
     height: fit-content;
+    position: absolute;
+    right: 6.5vw;
+}
+
+#delete {
+    background-color: white;
+    border-color: white;
+    border-style: solid;
+    box-shadow: none;
+    cursor: pointer;
+    font-size: 1.5vh;
+    height: fit-content;
+    height: fit-content;
+    position: absolute;
+    right: 2.5vw;
 }
 
 #save:hover,

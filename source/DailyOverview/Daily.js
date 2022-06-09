@@ -6,6 +6,7 @@ import {
     getMonthlyGoals,
     getTheme,
     getYearlyGoals,
+    redirectNotLoggedInUser,
     updateDay,
     updateNote,
 } from '../Backend/BackendInit.js';
@@ -38,7 +39,15 @@ let relative = 0; // index used for accessing images
 // session with daily.js
 let currentDay;
 
+const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
+
 window.onload = async () => {
+    await redirectNotLoggedInUser(
+        (msg) => customAlert(msg),
+        PAGE_TIMEOUT_FOR_INVALID_USER
+    );
+
+    eventListenerSetup();
     // load page's theme based on user's selected theme from weekly overview
     loadTheme();
     // get the day and also the monthly and yearly goals
@@ -60,6 +69,237 @@ function bulletChangeResolution() {
     document.querySelector('#bullets').innerHTML = '';
     renderBullets(currentDay.bullets);
     updateDay(currentDay);
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    const closeButtonHTML =
+        '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>';
+    document.querySelector('.alert').style.display = 'flex';
+    document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
+    setTimeout(() => {
+        document.querySelector('.alert').style.display = 'none';
+    }, 3000);
+}
+
+function eventListenerSetup() {
+    // ~~~~~~~~~~~~~~~ Event Listeners ~~~~~~~~~~~~~~~
+
+    // the space in the template literal below is needed for proper rendering
+    document.getElementById('date').innerHTML += ` ${CURR_DATE_STRING}`;
+
+    // set back button
+    document.getElementById('home').addEventListener('click', () => {
+        updateDay(currentDay);
+        window.location.replace('../WeeklyOverview/WeeklyOverview.html');
+    });
+
+    // add listener for saving notes
+    const noteSave = document.getElementById('notes-save');
+    noteSave.addEventListener('click', () => {
+        updateNotes();
+        customAlert('Notes saved!');
+    });
+
+    // ~~~~~~~~~~~~~~~ Bullet Event Listeners ~~~~~~~~~~~~~~~
+    const bullets = document.querySelector('#bullets');
+
+    // lets bullet component listen to when a bullet child is added
+    bullets.addEventListener('added', function (e) {
+        // gets the index and json object of the current bullet we want to look at
+        const newJson = JSON.parse(
+            e.composedPath()[0].getAttribute('bulletJson')
+        );
+        const index = JSON.parse(e.composedPath()[0].getAttribute('index'));
+
+        // if 3rd layer of nesting, add it to our children
+        if (e.composedPath().length > 7) {
+            currentDay.bullets[index[0]].childList[index[1]] = newJson;
+        } else {
+            currentDay.bullets[index[0]] = newJson;
+        }
+
+        bulletChangeResolution();
+    });
+
+    // lets bullet component listen to when a bullet is deleted
+    bullets.addEventListener('deleted', function (e) {
+        const callback = (...indexes) => {
+            const list = getBulletList(...indexes);
+
+            // if there is only one index, we are deleting a top-level bullet. if
+            // there is a second index, we are deleting an intermediate-level bullet.
+            // if there is a third index, we are deleting a bottom-level bullet.
+            if (indexes.length == 1) {
+                generalOp(list, Array.prototype.splice, indexes[0], 1);
+            } else if (indexes.length == 2) {
+                generalOp(list, Array.prototype.splice, indexes[1], 1);
+            } else {
+                generalOp(list, Array.prototype.splice, indexes[2], 1);
+            }
+        };
+
+        // sets up event listener for bullet when it is deleted
+        generalBulletListener(e, callback);
+    });
+
+    // lets bullet component listen to when a bullet is marked done
+    bullets.addEventListener('done', function (e) {
+        const callback = (...indexes) => {
+            // we need to access the last index after getting the bullet list here
+            // because we are trying to access an object to edit its properties
+            const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
+            generalOp(list, toggleBulletStatus, list);
+        };
+
+        // sets up event listener for bullet when it is marked as done
+        generalBulletListener(e, callback);
+    });
+
+    // lets bullet component listen to when a bullet is edited
+    bullets.addEventListener('edited', function (e) {
+        const jsonAttribute = e.composedPath()[0].getAttribute('bulletJson');
+        const newText = JSON.parse(jsonAttribute).text;
+
+        const callback = (...indexes) => {
+            // see callback explanation for 'done' event listener above
+            const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
+            generalOp(list, setBulletText, list, newText);
+        };
+
+        // sets up event listener for bullet when it is edited
+        generalBulletListener(e, callback);
+    });
+
+    // lets bullet component listen to when a bullet is clicked category
+    bullets.addEventListener('features', function (e) {
+        const path = e.composedPath()[0];
+        const newFeature = JSON.parse(path.getAttribute('bulletJson')).features;
+
+        const callback = (...indexes) => {
+            // see callback explanation for 'done' event listener above
+            const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
+            generalOp(list, setBulletFeature, list, newFeature);
+        };
+
+        // sets up event listener for bullet when its feature is altered
+        generalBulletListener(e, callback);
+    });
+
+    const entryForm = document.querySelector('.entry-form');
+    entryForm.addEventListener('submit', (submit) => {
+        submit.preventDefault(); // prevent page refresh on button press
+        const bText = document.querySelector('.entry-form-text').value;
+        if (bText === undefined || bText === '') {
+            return;
+        }
+
+        document.querySelector('.entry-form-text').value = '';
+
+        if (!('bullets' in currentDay)) {
+            currentDay.bullets = [];
+        }
+        // get the text in form on a submit, then push an object representing the
+        // bullet into our current day
+        currentDay.bullets.push({
+            text: bText,
+            done: false,
+            childList: [],
+            features: 'normal',
+        });
+
+        bulletChangeResolution();
+    });
+
+    // ~~~~~~~~~~~~~~~ Image Event Listeners ~~~~~~~~~~~~~~~
+
+    LEFT_BUTTON.addEventListener('click', () => {
+        // if there are no images, do nothing
+        if (window.img.length === 0) {
+            return;
+        }
+
+        // if the left button is selected, wrap the index around to the last index
+        // (if the user clicks back on the first image, render the last image)
+        const n = window.img.length;
+        relative = (((relative - 1) % n) + n) % n;
+
+        CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
+
+        // if there is no image at the 'last index' (ie the user deletes the only
+        // image) don't render anything
+        if (window.img[relative]) {
+            processCurrentImage();
+        }
+    });
+
+    RIGHT_BUTTON.addEventListener('click', () => {
+        // if there are no images, do nothing
+        if (window.img.length === 0) {
+            return;
+        }
+
+        // if the right button is selected, wrap the index around to the first index
+        // (if the user clicks forward on the last image, render the first image)
+        relative = (relative + 1) % window.img.length;
+
+        CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
+        // if there is no image at the 'last index' (ie the user deletes the only
+        // image) don't render anything
+        if (window.img[relative]) {
+            processCurrentImage();
+        }
+    });
+
+    // save image that was chosen in file selector to db and display it
+    // on image CANVAS
+    SAVE_BUTTON.addEventListener('click', async () => {
+        // if a file had not been loaded, do nothing
+        if (IMAGE_INPUT.files === undefined) {
+            return;
+        }
+
+        // This allows you to store blob -> base64
+        const base64 = await getBase64(IMAGE_INPUT.files[0]);
+
+        if (!('photos' in currentDay)) {
+            currentDay.photos = [];
+        }
+
+        currentDay.photos.push(base64);
+
+        // we save an image to the very end of our image array, so set the current
+        // index of the image we want to render to the very end of the list
+        relative = window.img.length;
+        renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
+
+        IMAGE_INPUT.value = null;
+        updateDay(currentDay);
+    });
+
+    DELETE_BUTTON.addEventListener('click', async () => {
+        if (window.img[relative] === undefined) {
+            return;
+        }
+
+        // get the current photo's index and remove it from our current day object
+        const dbPhotoIdx = currentDay.photos.indexOf(window.img[relative].src);
+        currentDay.photos.splice(dbPhotoIdx, 1);
+        window.img.splice(relative, 1);
+
+        // render the first image in our array after deletion
+        relative = 0;
+        if (window.img.length == relative) {
+            CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
+        }
+
+        renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
+
+        updateDay(currentDay);
+    });
 }
 
 /**
@@ -376,211 +616,3 @@ function updateNotes() {
     currentDay.notes = newNote;
     updateNote(CURR_DATE_STRING, newNote);
 }
-
-// ~~~~~~~~~~~~~~~ Event Listeners ~~~~~~~~~~~~~~~
-
-// the space in the template literal below is needed for proper rendering
-document.getElementById('date').innerHTML += ` ${CURR_DATE_STRING}`;
-
-// set back button
-document.getElementById('home').addEventListener('click', () => {
-    updateDay(currentDay);
-    window.location.replace('../WeeklyOverview/WeeklyOverview.html');
-});
-
-// add listener for saving notes
-const noteSave = document.getElementById('notes-save');
-noteSave.addEventListener('click', () => updateNotes());
-
-// ~~~~~~~~~~~~~~~ Bullet Event Listeners ~~~~~~~~~~~~~~~
-
-// lets bullet component listen to when a bullet child is added
-document.querySelector('#bullets').addEventListener('added', function (e) {
-    // gets the index and json object of the current bullet we want to look at
-    const newJson = JSON.parse(e.composedPath()[0].getAttribute('bulletJson'));
-    const index = JSON.parse(e.composedPath()[0].getAttribute('index'));
-
-    // if 3rd layer of nesting, add it to our children
-    if (e.composedPath().length > 7) {
-        currentDay.bullets[index[0]].childList[index[1]] = newJson;
-    } else {
-        currentDay.bullets[index[0]] = newJson;
-    }
-
-    bulletChangeResolution();
-});
-
-// lets bullet component listen to when a bullet is deleted
-document.querySelector('#bullets').addEventListener('deleted', function (e) {
-    const callback = (...indexes) => {
-        const list = getBulletList(...indexes);
-
-        // if there is only one index, we are deleting a top-level bullet. if
-        // there is a second index, we are deleting an intermediate-level bullet.
-        // if there is a third index, we are deleting a bottom-level bullet.
-        if (indexes.length == 1) {
-            generalOp(list, Array.prototype.splice, indexes[0], 1);
-        } else if (indexes.length == 2) {
-            generalOp(list, Array.prototype.splice, indexes[1], 1);
-        } else {
-            generalOp(list, Array.prototype.splice, indexes[2], 1);
-        }
-    };
-
-    // sets up event listener for bullet when it is deleted
-    generalBulletListener(e, callback);
-});
-
-// lets bullet component listen to when a bullet is marked done
-document.querySelector('#bullets').addEventListener('done', function (e) {
-    const callback = (...indexes) => {
-        // we need to access the last index after getting the bullet list here
-        // because we are trying to access an object to edit its properties
-        const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
-        generalOp(list, toggleBulletStatus, list);
-    };
-
-    // sets up event listener for bullet when it is marked as done
-    generalBulletListener(e, callback);
-});
-
-// lets bullet component listen to when a bullet is edited
-document.querySelector('#bullets').addEventListener('edited', function (e) {
-    const newText = JSON.parse(e.composedPath()[0].getAttribute('bulletJson'))
-        .text;
-
-    const callback = (...indexes) => {
-        // see callback explanation for 'done' event listener above
-        const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
-        generalOp(list, setBulletText, list, newText);
-    };
-
-    // sets up event listener for bullet when it is edited
-    generalBulletListener(e, callback);
-});
-
-// lets bullet component listen to when a bullet is clicked category
-document.querySelector('#bullets').addEventListener('features', function (e) {
-    const path = e.composedPath()[0];
-    const newFeature = JSON.parse(path.getAttribute('bulletJson')).features;
-
-    const callback = (...indexes) => {
-        // see callback explanation for 'done' event listener above
-        const list = getBulletList(...indexes)[indexes[indexes.length - 1]];
-        generalOp(list, setBulletFeature, list, newFeature);
-    };
-
-    // sets up event listener for bullet when its feature is altered
-    generalBulletListener(e, callback);
-});
-
-document.querySelector('.entry-form').addEventListener('submit', (submit) => {
-    submit.preventDefault(); // prevent page refresh on button press
-    const bText = document.querySelector('.entry-form-text').value;
-    if (bText === undefined || bText === '') {
-        return;
-    }
-
-    document.querySelector('.entry-form-text').value = '';
-
-    if (!('bullets' in currentDay)) {
-        currentDay.bullets = [];
-    }
-    // get the text in form on a submit, then push an object representing the
-    // bullet into our current day
-    currentDay.bullets.push({
-        text: bText,
-        done: false,
-        childList: [],
-        features: 'normal',
-    });
-
-    bulletChangeResolution();
-});
-
-// ~~~~~~~~~~~~~~~ Image Event Listeners ~~~~~~~~~~~~~~~
-
-LEFT_BUTTON.addEventListener('click', () => {
-    // if there are no images, do nothing
-    if (window.img.length === 0) {
-        return;
-    }
-
-    // if the left button is selected, wrap the index around to the last index
-    // (if the user clicks back on the first image, render the last image)
-    const n = window.img.length;
-    relative = (((relative - 1) % n) + n) % n;
-
-    CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
-
-    // if there is no image at the 'last index' (ie the user deletes the only
-    // image) don't render anything
-    if (window.img[relative]) {
-        processCurrentImage();
-    }
-});
-
-RIGHT_BUTTON.addEventListener('click', () => {
-    // if there are no images, do nothing
-    if (window.img.length === 0) {
-        return;
-    }
-
-    // if the right button is selected, wrap the index around to the first index
-    // (if the user clicks forward on the last image, render the first image)
-    relative = (relative + 1) % window.img.length;
-
-    CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    // if there is no image at the 'last index' (ie the user deletes the only
-    // image) don't render anything
-    if (window.img[relative]) {
-        processCurrentImage();
-    }
-});
-
-// save image that was chosen in file selector to db and display it
-// on image CANVAS
-SAVE_BUTTON.addEventListener('click', async () => {
-    // if a file had not been loaded, do nothing
-    if (IMAGE_INPUT.files === undefined) {
-        return;
-    }
-
-    // This allows you to store blob -> base64
-    const base64 = await getBase64(IMAGE_INPUT.files[0]);
-
-    if (!('photos' in currentDay)) {
-        currentDay.photos = [];
-    }
-
-    currentDay.photos.push(base64);
-
-    // we save an image to the very end of our image array, so set the current
-    // index of the image we want to render to the very end of the list
-    relative = window.img.length;
-    renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
-
-    IMAGE_INPUT.value = null;
-    updateDay(currentDay);
-});
-
-DELETE_BUTTON.addEventListener('click', async () => {
-    if (window.img[relative] === undefined) {
-        return;
-    }
-
-    // get the current photo's index and remove it from our current day object
-    const dbPhotoIdx = currentDay.photos.indexOf(window.img[relative].src);
-    currentDay.photos.splice(dbPhotoIdx, 1);
-    window.img.splice(relative, 1);
-
-    // render the first image in our array after deletion
-    relative = 0;
-    if (window.img.length == relative) {
-        CANV.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    }
-
-    renderPhotos(currentDay.photos !== undefined ? currentDay.photos : []);
-
-    updateDay(currentDay);
-});

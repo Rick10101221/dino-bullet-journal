@@ -12,8 +12,17 @@ body {
     padding: 0;
 }
 
-ul {
-    list-style-type: none;
+.alert {
+    background-color: #38b593;
+    color: white;
+    display: none;
+    justify-content: space-between;
+    left: 0px;
+    margin-bottom: 15px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
 }
 
 .calendar-wrapper {
@@ -30,6 +39,22 @@ ul {
 .calendar-bg {
     background: #c2f7b5;
     display: inline-block;
+    height: 100vh;
+    width: 100vw;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.wrapper {
+    background: black;
+    display: grid;
+    margin: 0px;
+    padding: 0px;
+    grid-template-rows: 1fr 3fr;
+    justify-items: stretch;
+    align-items: stretch;
     height: 100vh;
     width: 100vw;
 }

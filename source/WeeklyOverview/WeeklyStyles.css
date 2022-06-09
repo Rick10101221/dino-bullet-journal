@@ -57,6 +57,19 @@ select {
 
 /* || Header */
 
+.alert {
+    background-color: #38b593;
+    color: white;
+    display: none;
+    justify-content: space-between;
+    left: 0px;
+    margin-bottom: 15px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+}
+
 .header {
     background-image: url('../Images/weekly_header.jpg');
     display: inline-flex;
@@ -500,4 +513,20 @@ span.close {
 
 span.close:hover {
     cursor: pointer;
+}
+/* The close button */
+.closebtn {
+    margin-left: 10%;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
 }

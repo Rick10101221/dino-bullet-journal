@@ -4,6 +4,7 @@ import {
     getMonthObj,
     getTheme,
     getYearlyGoals,
+    redirectNotLoggedInUser,
     updateMonthlyGoals,
     updateYearlyGoals,
 } from '../Backend/BackendInit.js';
@@ -27,6 +28,7 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const DAY_OV_LINK = '../DailyOverview/DailyOverview.html';
 const YEAR_START = 2018;
 const YEAR_END = 2025;
+const PAGE_TIMEOUT_FOR_INVALID_USER = 3;
 
 // this month object keeps track of the month object from the db. this object
 // if constantly updated here and pushed to the database on change
@@ -35,6 +37,11 @@ let yearObj;
 let today, paddedDateStr;
 
 window.onload = async () => {
+    await redirectNotLoggedInUser(
+        (msg) => customAlert(msg),
+        PAGE_TIMEOUT_FOR_INVALID_USER
+    );
+
     await setupCalendar();
 };
 
@@ -79,6 +86,16 @@ function addGoalListeners() {
     goalListenerSetup(yearObj, '#yearGoal', '#plus-year', (obj) =>
         updateYearlyGoals(obj)
     );
+}
+
+/**
+ * Make pop up alert with custom css and text that is passed in
+ * @param {String} text
+ */
+function customAlert(text) {
+    const closeButtonHTML = '<span class="closebtn">&times;</span>';
+    document.querySelector('.alert').style.display = 'flex';
+    document.querySelector('.alert').innerHTML = `${text}${closeButtonHTML}`;
 }
 
 /**
@@ -165,6 +182,7 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
         const popup_submit = document.getElementById('submit-note');
 
         popup.style.display = 'block';
+        popup_text.focus();
         popup_cancel.onclick = function () {
             popup_text.value = '';
             popup.style.display = 'none';
@@ -179,6 +197,11 @@ function goalListenerSetup(goalObj, goalDivId, addHeaderId, callback) {
                 popup_submit.style.backgroundColor = '#39b594';
             } else {
                 popup_submit.style.backgroundColor = '#a9c7bf';
+            }
+        });
+        popup_text.addEventListener('keypress', (e) => {
+            if (e.key == 'Enter') {
+                popup_submit.dispatchEvent(new Event('click'));
             }
         });
     };
