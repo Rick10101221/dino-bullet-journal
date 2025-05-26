@@ -4,6 +4,7 @@
 **Why settle for a normal bullet journal when you can use a dinosaur-themed one?**
 
 ### Important Links
+- [Primary Demo Link and Tech Stack Discussion](https://drive.google.com/file/d/1E1s4PZXU5OLTqc-oXvh5q-XFKtvUK186/view?usp=sharing)
 - [Github Team Link](https://cse112-sp22-group9.github.io/cse112-sp22-group9/)<br/>
 - [Public EOY Class Video](https://drive.google.com/file/d/1PkCkvBnN_DA7AiZF33Rz0WhX9MXZ7oq9/view?usp=sharing)<br/>
 - Documentation Site: Our jsDocs are hosted [here](https://dustinlin.github.io/CSE112-sp22-group9-docs/)
